@@ -37,7 +37,8 @@ Prioritäten:
   - `z31476.pdf`: BSMS/2 Mainframe Technical Manual (1999). Kap. 5 „BSMS Keyboard KBC“ enthält das Blockschaltbild der Tastatur.
 - `Fotos/`: Fotos der geöffneten Tastatur. Die Bilder sind groß (bis 3072×4096); das Read-Tool skaliert sie herunter, kleine Beschriftungen ggf. gezielt nachfragen.
 - `Fotos_web/`: verkleinerte Kopien (max. 1600 px) für das Git-Repo. `Fotos/` (Originale) steht in `.gitignore`.
-- `README.md`: Kurzbeschreibung für GitHub.
+- `README.md`: Projektbeschreibung für GitHub mit Bildern, kompakter Pinbelegung und Ausblick. Bei neuen Erkenntnissen mitpflegen.
+- `docs/img/`: Bilder für die README (u. a. das Originallayout aus z31185, Figure 2).
 - `PINOUT.md`: Messtabelle und Belegung der 64 Flachbandkabel-Adern sowie des Encoders.
 - `tools/serial_log.py`: serieller Mitschnitt mit Zeitstempel (Windows-Python), Aufruf: `python.exe tools\serial_log.py COM8 <logdatei> [sekunden] [befehl]`. Das Öffnen des Ports setzt den Mega zurück.
 - `tools/matrix_finder.py`: interaktives Programm, das **der Nutzer selbst in PowerShell startet**: `& "$env:LOCALAPPDATA\Programs\Python\Python313\python.exe" tools\matrix_finder.py COM8`. Es fragt jede der 35 Tasten der Reihe nach ab und erkennt sie automatisch per Scan. Das Ergebnis landet in `logs/matrix_finder_<zeit>.json`.
