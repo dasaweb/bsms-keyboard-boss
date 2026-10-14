@@ -1,0 +1,25 @@
+{
+  "basis": [
+    "L26",
+    "H02"
+  ],
+  "ruhe": "LED 24 bis LED 24 (wobei LED27 nicht bestückt ist)",
+  "adern": {
+    "P46": {
+      "pegel": "L",
+      "beobachtung": "LED20"
+    },
+    "P47": {
+      "pegel": "L",
+      "beobachtung": "LED21"
+    },
+    "P48": {
+      "pegel": "L",
+      "beobachtung": "LED22"
+    },
+    "P49": {
+      "pegel": "L",
+      "beobachtung": "nichts (wäre vermutlich LED 27)"
+    }
+  }
+}

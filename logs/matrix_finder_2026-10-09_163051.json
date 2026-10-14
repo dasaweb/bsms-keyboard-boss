@@ -1,0 +1,263 @@
+{
+  "wires": {
+    "0": 2,
+    "1": 4,
+    "2": 6,
+    "3": 8,
+    "4": 10,
+    "5": 12,
+    "6": 14,
+    "7": 16,
+    "8": 18,
+    "9": 20,
+    "10": 22,
+    "11": 24,
+    "12": 25,
+    "13": 26,
+    "14": 27,
+    "15": 28,
+    "16": 29,
+    "17": 30,
+    "18": 31,
+    "19": 32,
+    "20": 33,
+    "21": 34,
+    "22": 35,
+    "23": 36,
+    "24": 37,
+    "25": 38,
+    "26": 39,
+    "27": 40,
+    "28": 41,
+    "29": 42,
+    "30": 43,
+    "31": 44,
+    "32": 45,
+    "33": 46,
+    "34": 47,
+    "35": 48,
+    "36": 49,
+    "37": 50,
+    "38": 51,
+    "39": 52,
+    "40": 53,
+    "41": 54,
+    "42": 55,
+    "43": 56,
+    "44": 57,
+    "45": 58,
+    "46": 59
+  },
+  "keys": {
+    "SW1": {
+      "label": "LIFT ON-OFF",
+      "effects": [
+        "P14 H -> P45 LOW"
+      ]
+    },
+    "SW2": {
+      "label": "SPIN RATE",
+      "effects": [
+        "P14 H -> P44 LOW"
+      ]
+    },
+    "SW3": {
+      "label": "SPIN ON-OFF",
+      "effects": [
+        "P14 H -> P43 LOW"
+      ]
+    },
+    "SW4": {
+      "label": "CHAN. SELECT",
+      "effects": [
+        "direkt: P59 -> LOW"
+      ]
+    },
+    "SW5": {
+      "label": "TRANS. P-DOWN",
+      "effects": [
+        "direkt: P58 -> LOW"
+      ]
+    },
+    "SW6": {
+      "label": "FIELD",
+      "effects": [
+        "P12 H -> P45 LOW"
+      ]
+    },
+    "SW7": {
+      "label": "LOCK PHASE",
+      "effects": [
+        "P12 H -> P44 LOW"
+      ]
+    },
+    "SW8": {
+      "label": "LOCK POWER",
+      "effects": [
+        "P12 H -> P43 LOW"
+      ]
+    },
+    "SW9": {
+      "label": "LOCK GAIN",
+      "effects": [
+        "P12 H -> P42 LOW"
+      ]
+    },
+    "SW10": {
+      "label": "SWEEP",
+      "effects": [
+        "P12 H -> P41 LOW"
+      ]
+    },
+    "SW11": {
+      "label": "SWEEP AMPL.",
+      "effects": [
+        "P12 H -> P40 LOW"
+      ]
+    },
+    "SW12": {
+      "label": "HE LEVEL",
+      "effects": [
+        "P10 H -> P45 LOW"
+      ]
+    },
+    "SW13": {
+      "label": "(unbeschriftet)",
+      "effects": [
+        "P10 H -> P44 LOW"
+      ]
+    },
+    "SW14": {
+      "label": "LOCK ON-OFF",
+      "effects": [
+        "P10 H -> P43 LOW"
+      ]
+    },
+    "SW15": {
+      "label": "AUTO LOCK",
+      "effects": [
+        "P10 H -> P42 LOW"
+      ]
+    },
+    "SW16": {
+      "label": "LOCK DC",
+      "effects": [
+        "P10 H -> P41 LOW"
+      ]
+    },
+    "SW17": {
+      "label": "LOCK SHIFT",
+      "effects": [
+        "P10 H -> P40 LOW"
+      ]
+    },
+    "SW18": {
+      "label": "Z0",
+      "effects": [
+        "P08 H -> P45 LOW"
+      ]
+    },
+    "SW19": {
+      "label": "Z1",
+      "effects": [
+        "P08 H -> P44 LOW"
+      ]
+    },
+    "SW20": {
+      "label": "Z2",
+      "effects": [
+        "P08 H -> P43 LOW"
+      ]
+    },
+    "SW21": {
+      "label": "Z3",
+      "effects": [
+        "P08 H -> P42 LOW"
+      ]
+    },
+    "SW22": {
+      "label": "Z4",
+      "effects": [
+        "P08 H -> P41 LOW"
+      ]
+    },
+    "SW23": {
+      "label": "Z5",
+      "effects": [
+        "P08 H -> P40 LOW"
+      ]
+    },
+    "SW24": {
+      "label": "X",
+      "effects": [
+        "P06 H -> P45 LOW"
+      ]
+    },
+    "SW25": {
+      "label": "Y",
+      "effects": [
+        "P06 H -> P44 LOW"
+      ]
+    },
+    "SW26": {
+      "label": "X2-Y2",
+      "effects": [
+        "P06 H -> P43 LOW"
+      ]
+    },
+    "SW27": {
+      "label": "XY",
+      "effects": [
+        "P06 H -> P42 LOW"
+      ]
+    },
+    "SW28": {
+      "label": "X3",
+      "effects": [
+        "P06 H -> P41 LOW"
+      ]
+    },
+    "SW29": {
+      "label": "Y3",
+      "effects": [
+        "P06 H -> P40 LOW"
+      ]
+    },
+    "SW30": {
+      "label": "ONAXIS",
+      "effects": [
+        "P04 H -> P45 LOW"
+      ]
+    },
+    "SW31": {
+      "label": "AUTO SHIM",
+      "effects": [
+        "P04 H -> P44 LOW"
+      ]
+    },
+    "SW32": {
+      "label": "DIFF. MODE",
+      "effects": [
+        "P04 H -> P43 LOW"
+      ]
+    },
+    "SW33": {
+      "label": "STD BY",
+      "effects": [
+        "P04 H -> P42 LOW"
+      ]
+    },
+    "SW34": {
+      "label": "FINE",
+      "effects": [
+        "P04 H -> P41 LOW"
+      ]
+    },
+    "SW35": {
+      "label": "2nd",
+      "effects": [
+        "P04 H -> P40 LOW"
+      ]
+    }
+  }
+}

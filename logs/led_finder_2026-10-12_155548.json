@@ -1,0 +1,33 @@
+{
+  "basis": [
+    "L26",
+    "H02"
+  ],
+  "ruhe": "LED20, 21, 22, 23, 24 (zwischen LED 22 und 23 sitzt 27, die ist aber nicht bestückt)",
+  "adern": {
+    "P46": {
+      "pegel": "L",
+      "beobachtung": "LED20"
+    },
+    "P47": {
+      "pegel": "L",
+      "beobachtung": "LED21"
+    },
+    "P48": {
+      "pegel": "L",
+      "beobachtung": "LED22"
+    },
+    "P49": {
+      "pegel": "L",
+      "beobachtung": "nichts (wäre aber LED27, hab ich mit dem Multimeter gemessen)"
+    },
+    "P50": {
+      "pegel": "L",
+      "beobachtung": "LED23"
+    },
+    "P51": {
+      "pegel": "L",
+      "beobachtung": "LED24"
+    }
+  }
+}

@@ -1,0 +1,209 @@
+{
+  "_basis": [
+    "L26"
+  ],
+  "DIS1.oben01": [
+    {
+      "ruhe": "L",
+      "treffer": []
+    }
+  ],
+  "DIS1.oben02": [
+    {
+      "ruhe": "L",
+      "treffer": []
+    }
+  ],
+  "DIS1.oben03": [
+    {
+      "ruhe": "H",
+      "treffer": [
+        "P16+"
+      ]
+    }
+  ],
+  "DIS1.oben04": [
+    {
+      "ruhe": "H",
+      "treffer": [
+        "P53+"
+      ]
+    }
+  ],
+  "DIS1.oben05": [
+    {
+      "ruhe": "H",
+      "treffer": [
+        "P38+"
+      ]
+    }
+  ],
+  "DIS1.oben06": [
+    {
+      "ruhe": "H",
+      "treffer": [
+        "P37+"
+      ]
+    }
+  ],
+  "DIS1.oben07": [
+    {
+      "ruhe": "H",
+      "treffer": []
+    }
+  ],
+  "DIS1.oben08": [
+    {
+      "ruhe": "H",
+      "treffer": []
+    }
+  ],
+  "DIS1.oben09": [
+    {
+      "ruhe": "H",
+      "treffer": [
+        "P36+"
+      ]
+    }
+  ],
+  "DIS1.oben10": [
+    {
+      "ruhe": "H",
+      "treffer": [
+        "P35+"
+      ]
+    }
+  ],
+  "DIS1.oben11": [
+    {
+      "ruhe": "H",
+      "treffer": [
+        "P34+"
+      ]
+    }
+  ],
+  "DIS1.oben12": [
+    {
+      "ruhe": "H",
+      "treffer": [
+        "P33+"
+      ]
+    }
+  ],
+  "DIS1.oben13": [
+    {
+      "ruhe": "H",
+      "treffer": [
+        "P30+"
+      ]
+    }
+  ],
+  "DIS1.oben14": [
+    {
+      "ruhe": "H",
+      "treffer": [
+        "P28+"
+      ]
+    }
+  ],
+  "DIS1.unten01": [
+    {
+      "ruhe": "H",
+      "treffer": []
+    }
+  ],
+  "DIS1.unten02": [
+    {
+      "ruhe": "H",
+      "treffer": [
+        "P54+"
+      ]
+    }
+  ],
+  "DIS1.unten03": [
+    {
+      "ruhe": "H",
+      "treffer": []
+    }
+  ],
+  "DIS1.unten04": [
+    {
+      "ruhe": "L",
+      "treffer": []
+    }
+  ],
+  "DIS1.unten05": [
+    {
+      "ruhe": "H",
+      "treffer": [
+        "P31+"
+      ]
+    }
+  ],
+  "DIS1.unten06": [
+    {
+      "ruhe": "H",
+      "treffer": []
+    }
+  ],
+  "DIS1.unten07": [
+    {
+      "ruhe": "H",
+      "treffer": []
+    }
+  ],
+  "DIS1.unten08": [
+    {
+      "ruhe": "H",
+      "treffer": []
+    }
+  ],
+  "DIS1.unten09": [
+    {
+      "ruhe": "H",
+      "treffer": [
+        "P29+"
+      ]
+    }
+  ],
+  "DIS1.unten10": [
+    {
+      "ruhe": "H",
+      "treffer": [
+        "P27+"
+      ]
+    }
+  ],
+  "DIS1.unten11": [
+    {
+      "ruhe": "H",
+      "treffer": [
+        "P25+"
+      ]
+    }
+  ],
+  "DIS1.unten12": [
+    {
+      "ruhe": "H",
+      "treffer": [
+        "P22+"
+      ]
+    }
+  ],
+  "DIS1.unten13": [
+    {
+      "ruhe": "H",
+      "treffer": [
+        "P20+"
+      ]
+    }
+  ],
+  "DIS1.unten14": [
+    {
+      "ruhe": "H",
+      "treffer": [
+        "P39+"
+      ]
+    }
+  ]
+}

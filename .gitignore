@@ -1,0 +1,4 @@
+# Original-Fotos (groß); verkleinerte Kopien liegen in Fotos_web/
+Fotos/
+__pycache__/
+*.pyc

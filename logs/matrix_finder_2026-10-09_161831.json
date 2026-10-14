@@ -1,0 +1,197 @@
+{
+  "wires": {
+    "0": 2,
+    "1": 4,
+    "2": 6,
+    "3": 8,
+    "4": 10,
+    "5": 12,
+    "6": 14,
+    "7": 16,
+    "8": 18,
+    "9": 20,
+    "10": 22,
+    "11": 24,
+    "12": 25,
+    "13": 26,
+    "14": 27,
+    "15": 28,
+    "16": 29,
+    "17": 30,
+    "18": 31,
+    "19": 32,
+    "20": 33,
+    "21": 34,
+    "22": 35,
+    "23": 36,
+    "24": 37,
+    "25": 38,
+    "26": 39,
+    "27": 40,
+    "28": 41,
+    "29": 42,
+    "30": 43,
+    "31": 44,
+    "32": 45,
+    "33": 46,
+    "34": 47,
+    "35": 48,
+    "36": 49,
+    "37": 50,
+    "38": 51,
+    "39": 52,
+    "40": 53,
+    "41": 54,
+    "42": 55,
+    "43": 56,
+    "44": 57,
+    "45": 58,
+    "46": 59
+  },
+  "keys": {
+    "SW1": {
+      "label": "LIFT ON-OFF",
+      "effects": []
+    },
+    "SW2": {
+      "label": "SPIN RATE",
+      "effects": []
+    },
+    "SW3": {
+      "label": "SPIN ON-OFF",
+      "effects": []
+    },
+    "SW4": {
+      "label": "CHAN. SELECT",
+      "effects": [
+        "direkt: P59 -> LOW"
+      ]
+    },
+    "SW5": {
+      "label": "TRANS. P-DOWN",
+      "effects": [
+        "direkt: P58 -> LOW"
+      ]
+    },
+    "SW6": {
+      "label": "FIELD",
+      "effects": []
+    },
+    "SW7": {
+      "label": "LOCK PHASE",
+      "effects": []
+    },
+    "SW8": {
+      "label": "LOCK POWER",
+      "effects": []
+    },
+    "SW9": {
+      "label": "LOCK GAIN",
+      "effects": []
+    },
+    "SW10": {
+      "label": "SWEEP",
+      "effects": []
+    },
+    "SW11": {
+      "label": "SWEEP AMPL.",
+      "effects": []
+    },
+    "SW12": {
+      "label": "HE LEVEL",
+      "effects": []
+    },
+    "SW13": {
+      "label": "(unbeschriftet)",
+      "effects": []
+    },
+    "SW14": {
+      "label": "LOCK ON-OFF",
+      "effects": []
+    },
+    "SW15": {
+      "label": "AUTO LOCK",
+      "effects": []
+    },
+    "SW16": {
+      "label": "LOCK DC",
+      "effects": []
+    },
+    "SW17": {
+      "label": "LOCK SHIFT",
+      "effects": []
+    },
+    "SW18": {
+      "label": "Z0",
+      "effects": []
+    },
+    "SW19": {
+      "label": "Z1",
+      "effects": []
+    },
+    "SW20": {
+      "label": "Z2",
+      "effects": []
+    },
+    "SW21": {
+      "label": "Z3",
+      "effects": []
+    },
+    "SW22": {
+      "label": "Z4",
+      "effects": []
+    },
+    "SW23": {
+      "label": "Z5",
+      "effects": []
+    },
+    "SW24": {
+      "label": "X",
+      "effects": []
+    },
+    "SW25": {
+      "label": "Y",
+      "effects": []
+    },
+    "SW26": {
+      "label": "X2-Y2",
+      "effects": []
+    },
+    "SW27": {
+      "label": "XY",
+      "effects": []
+    },
+    "SW28": {
+      "label": "X3",
+      "effects": []
+    },
+    "SW29": {
+      "label": "Y3",
+      "effects": []
+    },
+    "SW30": {
+      "label": "ONAXIS",
+      "effects": []
+    },
+    "SW31": {
+      "label": "AUTO SHIM",
+      "effects": []
+    },
+    "SW32": {
+      "label": "DIFF. MODE",
+      "effects": []
+    },
+    "SW33": {
+      "label": "STD BY",
+      "effects": []
+    },
+    "SW34": {
+      "label": "FINE",
+      "effects": []
+    },
+    "SW35": {
+      "label": "2nd",
+      "effects": []
+    }
+  }
+}

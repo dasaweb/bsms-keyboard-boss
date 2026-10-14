@@ -1,0 +1,49 @@
+{
+  "_basis": [
+    "L26"
+  ],
+  "DIS2.oben03": [
+    {
+      "ruhe": "H",
+      "treffer": [
+        "P18+"
+      ]
+    }
+  ],
+  "DIS2.oben05": [
+    {
+      "ruhe": "H",
+      "treffer": [
+        "P38+"
+      ]
+    }
+  ],
+  "DIS2.unten02": [
+    {
+      "ruhe": "H",
+      "treffer": [
+        "P54+"
+      ]
+    }
+  ],
+  "DIS2.unten03": [
+    {
+      "ruhe": "L",
+      "treffer": []
+    }
+  ],
+  "DIS2.unten04": [
+    {
+      "ruhe": "H",
+      "treffer": []
+    }
+  ],
+  "DIS2.unten14": [
+    {
+      "ruhe": "H",
+      "treffer": [
+        "P39+"
+      ]
+    }
+  ]
+}

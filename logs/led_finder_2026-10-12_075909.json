@@ -1,0 +1,33 @@
+{
+  "basis": [
+    "L26",
+    "H04"
+  ],
+  "ruhe": "die untere Reihe, 6 LEDs",
+  "adern": {
+    "P46": {
+      "pegel": "L",
+      "beobachtung": "ONAXIS"
+    },
+    "P47": {
+      "pegel": "L",
+      "beobachtung": "AUTOSHIM"
+    },
+    "P48": {
+      "pegel": "L",
+      "beobachtung": "DIFF MODE"
+    },
+    "P49": {
+      "pegel": "L",
+      "beobachtung": "STD BY"
+    },
+    "P50": {
+      "pegel": "L",
+      "beobachtung": "FINE"
+    },
+    "P51": {
+      "pegel": "L",
+      "beobachtung": "2DN"
+    }
+  }
+}

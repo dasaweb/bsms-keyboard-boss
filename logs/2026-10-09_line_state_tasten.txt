@@ -1,0 +1,55 @@
+   0.91  line_state BSMS/2 – Board versorgt, nur lesend
+   0.95  === Zustand: Ader  ohnePU mitPU  Klasse  [mV ohne PU] ===
+   0.96  P02  L  L  LL getrieben LOW
+   0.96  P04  L  L  LL getrieben LOW
+   0.96  P06  L  L  LL getrieben LOW
+   0.97  P08  L  L  LL getrieben LOW
+   0.97  P10  L  L  LL getrieben LOW
+   0.97  P12  L  L  LL getrieben LOW
+   0.97  P14  L  L  LL getrieben LOW
+   0.97  P16  H  H  HH getrieben HIGH
+   0.98  P18  H  H  HH getrieben HIGH
+   0.98  P20  H  H  HH getrieben HIGH
+   0.98  P22  H  H  HH getrieben HIGH
+   0.98  P24  H  H  HH getrieben HIGH
+   0.99  P25  H  H  HH getrieben HIGH
+   0.99  P26  H  H  HH getrieben HIGH
+   0.99  P27  H  H  HH getrieben HIGH
+   0.99  P28  H  H  HH getrieben HIGH
+   1.00  P29  H  H  HH getrieben HIGH
+   1.00  P30  H  H  HH getrieben HIGH
+   1.00  P31  H  H  HH getrieben HIGH
+   1.00  P32  H  H  HH getrieben HIGH
+   1.01  P33  H  H  HH getrieben HIGH  5000 mV
+   1.01  P34  H  H  HH getrieben HIGH  5000 mV
+   1.02  P35  H  H  HH getrieben HIGH  4956 mV
+   1.02  P36  H  H  HH getrieben HIGH  4936 mV
+   1.02  P37  H  H  HH getrieben HIGH  4916 mV
+   1.02  P38  H  H  HH getrieben HIGH  4916 mV
+   1.03  P39  H  H  HH getrieben HIGH  4995 mV
+   1.03  P40  H  H  HH getrieben HIGH  5000 mV
+   1.04  P41  H  H  HH getrieben HIGH  5000 mV
+   1.04  P42  H  H  HH getrieben HIGH  5000 mV
+   1.04  P43  H  H  HH getrieben HIGH  5000 mV
+   1.04  P44  H  H  HH getrieben HIGH  5000 mV
+   1.05  P45  H  H  HH getrieben HIGH  5000 mV
+   1.05  P46  H  H  HH getrieben HIGH  3919 mV
+   1.06  P47  H  H  HH getrieben HIGH  3861 mV
+   1.06  P48  H  H  HH getrieben HIGH  3621 mV
+   1.06  P49  H  H  HH getrieben HIGH
+   1.06  P50  H  H  HH getrieben HIGH
+   1.06  P51  H  H  HH getrieben HIGH
+   1.07  P52  L  L  LL getrieben LOW
+   1.07  P53  H  H  HH getrieben HIGH
+   1.07  P54  H  H  HH getrieben HIGH
+   1.08  P55  H  H  HH getrieben HIGH
+   1.08  P56  H  H  HH getrieben HIGH
+   1.08  P57  H  H  HH getrieben HIGH
+   1.08  P58  H  H  HH getrieben HIGH
+   1.09  P59  H  H  HH getrieben HIGH
+   1.09  === Ende ===
+   1.09  Ueberwache Pegel (Pull-ups an). Jetzt Tasten druecken...
+  73.89  72968 ms  P59 -> LOW
+  74.75  73825 ms  P59 -> HIGH
+  76.86  75935 ms  P58 -> LOW
+  77.73  76810 ms  P58 -> HIGH
