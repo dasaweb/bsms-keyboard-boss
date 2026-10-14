@@ -210,6 +210,14 @@ HDSP-2112-Ansteuerung (Quelle: arnowelzel.de/en/hdsp-211x, Datenblatt Broadcom A
       - Die Ausgänge liefern 3,3 V. Das reicht für die **18 Display-Leitungen** (HDSP-2112 hat TTL-Eingänge, HIGH ab 2,0 V), aber **nicht** für 74HC05/ULN2804 (7 Zeilen), 74HC245 (6 Bus) und 74HC595 + P26 (4).
       - Diese 17 Ausgänge laufen deshalb über **3 × 74HCT541** auf der Platine. Fertige TXS0108E-Pegelwandler-Module sind ungeeignet, weil sie sich mit den Pull-ups/Pull-downs des Boards nicht vertragen.
       - Platine: RP2350B-Modul, 3 × 74HCT541, 2×32-Wannenstecker, Encoder-Leiste, Versorgung (9–12 V → Step-Down 5 V; VS direkt). Die Firmware lässt sich größtenteils aus `keys` übernehmen.
+    - **E: Pico 2 / Pico 2 W (RP2350A, 26 GPIO) mit 74HCT595 als Pegelwandler und Port-Erweiterung (neuer Favorit, 2026-10-14):**
+      - Direkt angeschlossen bräuchte es **46** Leitungen; davon 19 fürs Display (D0–D7, A0–A4, /WR, /RD, 2× /CE, /FL, /RST).
+      - Reduktion:
+        - /RD und /FL fest auf HIGH, /RST per RC-Glied (−3).
+        - **3 × 74HCT595** auf der Platine (3,3 V rein, 5 V raus) liefern 24 Ausgänge über 3 GPIO: 7 Zeilen, 6 LED-Bus, 4 Kettensignale (P26, P55, P56, P57), A0–A4 und 2× /CE.
+      - Direkt am Pico bleiben: 595-Kette der Platine 3, Display D0–D7 + /WR 9 (3,3 V reichen, TTL-Eingänge), Tasten-Spalten 6, Direkttasten 2, Encoder 2 = **22 von 26 GPIO**, 4 Reserve (z. B. MIDI-DIN).
+      - **Es muss ein RP2350 sein (Pico 2), nicht der RP2040 (Pico 1).** Nur der RP2350 hat 5-V-tolerante Eingänge, und Tasten-Spalten und Encoder liefern 5 V. Vor dem Layout im Datenblatt verifizieren. Die 5-V-Toleranz gilt vermutlich nur bei versorgtem IOVDD, also keine 5 V an den Pico legen, solange er stromlos ist.
+      - **Pico 2 W** = gleiche GPIO-Zahl plus WLAN/Bluetooth: USB-HID/MIDI, BLE-MIDI/HID, NTP-Uhr, Flashen per USB, alles auf einem kleinen, günstigen Board.
     - **MIDI über DIN** geht mit jeder Option nebenbei: UART-TX (z. B. Serial1 des Mega) + 2 Widerstände + DIN-Buchse. Für den MIDI-Eingang bräuchte es einen Optokoppler.
   - **Empfehlung Claude:** Erst A ausprobieren (Software, ohne neue Hardware). Das Shield so planen, dass optional ein ESP32-S3-Modul (B) und ein MIDI-DIN-Ausgang bestückt werden können. Vorher ein PC-Programm „seriell → MIDI“ als schneller Test.
   - **Versorgung (vor dem PCB klären):** Strom messen: Leerlauf, alle LEDs an (`A1`), Displays auf 100 %, Selbsttest. Favorit: 9–12-V-Netzteil → Step-Down 5 V (Logik und Displays, am Mega-Regler vorbei) und VS (TP2) direkt aus 9–12 V. Nur USB mit Step-Up auf 12 V ist wegen 500 mA (2,5 W) vermutlich zu knapp.
