@@ -3,9 +3,9 @@
 Eine ausgemusterte **Bruker-BSMS/2-Tastatur** wird per Reverse-Engineering zum **USB-HID-/MIDI-Controller** umgebaut. Die Tastatur ist die Bedieneinheit der BSMS-Steuerung eines Bruker-NMR-Spektrometers, Version „BOSS“. Zum Testen hängt ein Arduino Mega 2560 am 64-poligen Flachbandkabel des Keyboard-Display-Boards. Die originale Controller-Platine fliegt raus.
 
 <p align="center">
-  <img src="docs/img/bsms_keyboard_boss_layout.png" width="300" alt="Originallayout der BSMS-Tastatur (Version BOSS)">
+  <img src="docs/img/bsms_keyboard_boss_layout.png" height="560" alt="Originallayout der BSMS-Tastatur (Version BOSS)">
   &nbsp;&nbsp;
-  <img src="Fotos_web/bb0dbb39-ebf8-4d93-984a-3ab3fdf8777a.jpg" width="330" alt="Geöffnete Tastatur mit Display-Board und Drehregler">
+  <img src="Fotos_web/bb0dbb39-ebf8-4d93-984a-3ab3fdf8777a.jpg" height="560" alt="Geöffnete Tastatur mit Display-Board und Drehregler">
 </p>
 <p align="center"><sub>Links: Originallayout aus dem Bruker BSMS User Manual (z31185, Figure 2). Rechts: das geöffnete Gerät.</sub></p>
 
@@ -26,9 +26,9 @@ Die **gesamte Bedienhardware läuft** am Arduino Mega mit der Demo-Firmware `ard
 Dazu gibt es eine grafische Oberfläche (`tools/keyboard_gui.py`). Sie spiegelt Tasten, LEDs, Displays und den Drehregler in Echtzeit. Ein Mausklick wirkt wie ein Tastendruck, und über ein Eingabefeld lässt sich Text auf die Displays schicken.
 
 <p align="center">
-  <img src="Fotos_web/IMG20261009131931.jpg" width="260" alt="Keyboard-Display-Board von vorn">
-  <img src="Fotos_web/IMG20261009132059.jpg" width="260" alt="Router-LEDs, Bargraph, 74HC595 und UDN2982A">
-  <img src="Fotos_web/IMG20261009132200.jpg" width="260" alt="HDSP-2112-Displays">
+  <img src="Fotos_web/IMG20261009131931.jpg" height="300" alt="Keyboard-Display-Board von vorn">
+  <img src="Fotos_web/IMG20261009132059.jpg" height="300" alt="Router-LEDs, Bargraph, 74HC595 und UDN2982A">
+  <img src="Fotos_web/IMG20261009132200.jpg" height="300" alt="HDSP-2112-Displays">
 </p>
 <p align="center"><sub>Keyboard-Display-Board „BSN-20“ (Spectrospin Z5P2844B) · Router-LEDs mit 74HC595/UDN2982A · die beiden HDSP-2112</sub></p>
 
