@@ -47,6 +47,30 @@ Dazu gibt es eine grafische Oberfläche (`tools/keyboard_gui.py`). Sie spiegelt 
 | Drehrad | Kette einstellen |
 | alle anderen | eigene LED an/aus, das Display zeigt den Tastennamen |
 
+## Varianten
+
+Dieselbe Tastatur gab es in mindestens drei Varianten. Sie haben dasselbe Gehäuse und dasselbe Tastenraster, nur Frontfolie, Tastenkappen und Firmware unterscheiden sich. Vermutlich gilt das Reverse-Engineering hier für alle drei.
+
+| Teilenummer | Typ | Einsatz |
+|---|---|---|
+| Z002706 | BSMS-HR20 | BSMS-Steuerung mit HR-20-Shimsystem (20 Shims, N-LEVEL, SHIM MATRIX) |
+| **Z012706** | **BSMS KEYBOARD BOSS** | BSMS-Steuerung mit BOSS1/2-Shims, **dieses Gerät** |
+| Z032706 | B-HPCU | High Power Control Unit für Festkörper-NMR (Verstärker, 4-Phasen-Modulator, MAS) |
+
+<p align="center">
+  <img src="docs/img/bsms_keyboard_boss_layout.png" width="220" alt="BOSS">
+  <img src="docs/img/bsms_keyboard_hr20_layout.png" width="220" alt="HR-20">
+  <img src="docs/img/hpcu_keyboard_layout.png" width="170" alt="B-HPCU">
+</p>
+<p align="center"><sub>BOSS (z31185 Fig. 2) · HR-20 (z31185 Fig. 3) · B-HPCU (z31314 Fig. 10.1)</sub></p>
+
+Das HPCU-Handbuch bestätigt unsere Messungen:
+- Das Router-Display bekommt einen **40-Bit-Bitstrom** (DLED/DCLK/DSTRB), genau unsere 595-Kette mit 40 Positionen.
+- **Zwei Tasten sind direkt verdrahtet** (TOGGLE und FINE bzw. TPD), das sind unsere Direkttasten oben rechts.
+- Zum Gerät läuft ein 25-poliges Kabel mit RS-485 (9600 Baud), versorgt mit ca. 10 V.
+
+Schaltpläne der Tastatur oder andere Umbauprojekte haben wir im Netz nicht gefunden. Die Bruker-Handbücher stammen aus dem [Bruker Advanced Service Handbook](https://2210pc.chem.uic.edu/nmr/downloads/BASHCD10/contents.html), gespiegelt an der UIC.
+
 ## Hardware
 
 - **Keyboard-Display-Board** (bleibt): 35 Taster mit LEDs, Router-Display (LED1–19, zwei 10er-Bargraphs HDSP-4830), zwei HDSP-2112.
@@ -200,5 +224,5 @@ Davor stehen noch drei Messungen an:
   - interaktive Messprogramme wie `pin_tracer.py`, `led_finder.py`, `led_test.py`, `matrix_finder.py`
 - `logs/`: Mitschnitte der Messläufe
 - `Fotos_web/`: Fotos der geöffneten Tastatur (verkleinert)
-- `Manuals/`: Original-Handbücher von Bruker/Spectrospin (BSMS User Manual, BSMS und BSMS/2 Mainframe Technical Manual)
+- `Manuals/`: Original-Handbücher von Bruker/Spectrospin (BSMS User Manual, BSMS und BSMS/2 Mainframe Technical Manual, BSMS Shim Manual, B-HPCU User Manual)
 - `docs/img/`: Bilder für diese README

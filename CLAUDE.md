@@ -35,6 +35,9 @@ Prioritäten:
   - `z31185.pdf`: BSMS User Manual. Tastenfunktionen, Menümodus, Varianten BOSS und HR-20.
   - `z31188.pdf`: BSMS Mainframe Technical Manual (1997).
   - `z31476.pdf`: BSMS/2 Mainframe Technical Manual (1999). Kap. 5 „BSMS Keyboard KBC“ enthält das Blockschaltbild der Tastatur.
+  - `z31186.pdf`: BSMS Shim Manual (SCB). Nennt „BOSS Keyboard Z012706“ als Voraussetzung für BOSS2.
+  - `z31314.pdf`: B-HPCU High Power Control Unit User Manual (1997). Kap. 2.3.3 „Keyboard I/O“, Tab. 4.4 Steckerbelegung der Tastatur, Kap. 10 Bedienung der HPCU-Tastatur. Das ist **dieselbe Tastaturfamilie** (Z032706).
+  - Quelle aller PDFs: Bruker Advanced Service Handbook (BASH), Spiegel an der UIC: https://2210pc.chem.uic.edu/nmr/downloads/BASHCD10/contents.html (direkte Links `.../BASHCD10/pdf/z<nr>.pdf`).
 - `Fotos/`: Fotos der geöffneten Tastatur. Die Bilder sind groß (bis 3072×4096); das Read-Tool skaliert sie herunter, kleine Beschriftungen ggf. gezielt nachfragen.
 - `Fotos_web/`: verkleinerte Kopien (max. 1600 px) für das Git-Repo. `Fotos/` (Originale) steht in `.gitignore`.
 - `README.md`: Projektbeschreibung für GitHub mit Bildern, kompakter Pinbelegung und Ausblick. Bei neuen Erkenntnissen mitpflegen.
@@ -90,6 +93,56 @@ Claude Code läuft in WSL. Das Projekt liegt bewusst auf `C:` (`/mnt/c/...`), da
 - **Encoder:** optisch, S1-256-BM6, 256 Striche pro Umdrehung, Quadratur. Pins: 1 GND, 2 NC, 3 Ch A, 4 +5 V, 5 Ch B.
 - **Stromaufnahme** der ganzen Tastatur: 240 mA im Standby, 1,2 A beim Displaytest. Zum Leuchten aller LEDs wird später eine externe Versorgung nötig; USB-5 V reichen nicht.
 - **Tastenbelegung des Display-Boards** (laut Foto): LIFT ON-OFF, SPIN RATE, SPIN ON-OFF, CHAN. SELECT, TRANS. P-DOWN / FIELD, LOCK PHASE, LOCK POWER, LOCK GAIN, SWEEP, SWEEP AMPL. / HE LEVEL, (leer), LOCK ON-OFF, AUTO LOCK, LOCK DC, LOCK SHIFT / Z0–Z5 / X, Y, X²-Y², XY, X³, Y³ / ONAXIS, AUTO SHIM, DIFF. MODE, STD BY, FINE, 2nd.
+
+## Varianten der Tastatur (Recherche 2026-10-15)
+
+Bruker-Teilenummern der Form **Z0n2706**: Die Ziffer n kennzeichnet die Variante, wie bei den Shim-Karten SCB13R/L/M = Z002709/Z012709/Z022709.
+
+| Teilenummer (Typenschild) | Typ | Gehört zu | Belege |
+|---|---|---|---|
+| **Z002706** | BSMS-HR20 | BSMS mit HR-20-Shimsystem (20 Shims) | Typenschild beim Nutzer; IET-Teileliste AMX 400: „Remote Status Unit BSMS-HR20-EC00 Z002706“; z31185 Fig. 3 |
+| **Z012706** | BSMS KEYBOARD BOSS | BSMS mit BOSS1/BOSS2-Shims, **unser Gerät** | Typenschild; z31186: „BOSS Keyboard Z012706“; eBay/LabX/IET-Angebote |
+| **Z032706** | B-HPCU | High Power Control Unit (Festkörper-NMR: Verstärker X/Y/H, 4-Phasen-Modulator, MAS-Rotor) | Typenschild; IET: „Remote Status Unit B-H PCU-EC-00 Z032/06“; z31314 Kap. 10 |
+
+Was die drei laut Handbüchern gemeinsam haben:
+- Gleiches Gehäuse und gleiches Tastenraster:
+  - oben das Router-Display mit 2 Bargraphs
+  - darunter 3 Tasten links und 2 Tasten rechts
+  - 2 × 6 Tasten, 5 Status-LEDs, das 2×8-Zeichen-Display
+  - 3 × 6 Tasten und der Drehregler
+- Die Varianten unterscheiden sich in Frontfolie und Tastenkappen, in der Firmware des Controllers und vermutlich in der Bestückung.
+- **Arbeitshypothese:** Die Display-Platine (BSN-20) ist bei allen gleich oder fast gleich. Unser Reverse-Engineering gilt dann für alle drei.
+
+Unterschiede der Beschriftung:
+- **HR-20 statt BOSS:**
+  - Kein ONAXIS, UNDO SHIM, POS/SEL, AMPL.
+  - Dafür N LEVEL, SHIM MATRIX (2nd + SHIM MATRIX = Menü) und andere Shim-Tasten (X, Y, XZ, YZ, Z, Z², …, XYZ, XZ³).
+  - Die beiden linken Tasten der zweiten Lock-Reihe sind leer.
+- **HPCU:**
+  - Router-Display mit ERR, CW, ⊓, HV pro Verstärker X/Y/H und den Bars mit FOR/REF/HIN-LEDs.
+  - 4 PH ENABLE, AMPL/PHASE-Tasten für FH/FX, TUNE/GAIN, MAS-Tasten (BEARING, DRIVE, SPIN, INSERT, EJECT …).
+  - Status-LEDs MAS STATUS AUTO / MAIN ON / SPIN LOCK sowie FUNCTION 2nd / MENU.
+  - **Oben rechts sitzen CHANNEL SELECT und DISP FINE**, also auf den Positionen unserer Direkttasten CHAN. SELECT/TRANS. P-DOWN.
+
+Erkenntnisse aus dem HPCU-Handbuch (z31314), die zu unseren Messungen passen:
+- „The HPCU keyboard gets a **bitstream with 40 bits** … Each bit takes a single clock pulse, and all 40 bits require **one strobe pulse**“ → genau unsere **595-Kette mit 40 Positionen**. Die Signale heißen DLED, DCLK, DSTRB. Bei der BSMS heißen sie DLED, CLK, STROBE, laut z31476 Fig. 17.
+- „Two of the keyboard switches are handled directly (not via SIO)“, bei HPCU TOGGLE und FINE, bei BSMS TOGGLE und TPD → unsere beiden **Direkttasten P59/P58**. TPD = T_POWER DOWN = TRANS. P-DOWN, TOGGLE = CHAN. SELECT.
+- Alle Signale zwischen Gerät und Tastatur laufen über RS-485 (75174/75175), seriell mit 9600 Baud 8N1. Die Versorgung beträgt ca. 10,9 V unstabilisiert; die Tastatur hat einen eigenen Regler.
+- Belegung des 25-poligen Mini-D-Steckers (HPCU, Tab. 4.4):
+  - AGND 1, 8, 9, 20, 21
+  - 10,9 V auf 10, 11, 22, 23
+  - DLED ± 3/15, DCLK ± 4/16, DSTRB ± 5/17
+  - TOGGLE ± 6/18, FINE ± 7/19
+  - KBC_TXD ± 12/24, KBC_RXD ± 13/25
+  - Bei der BSMS gehört dazu das Kabel 22887, für das Router-Display das Kabel 22886.
+- Status-LED-Zeile P02 (LED20–24): Bei der BSMS heißen diese LEDs laut Frontfolie SAMPLE UP / DOWN / MISSING und FUNCTION 2ND / MENU. Daraus ergibt sich die vermutliche Zuordnung LED20 = UP, LED21 = DOWN (grün), LED22 = MISSING, LED23 = 2ND, LED24 = MENU (laut z31185 „red Function Menu LED“).
+- **Offene Frage:** Laut Handbuch kommen die Router-Daten (DLED) seriell vom Gerät. Bei unserem Board hängt SER von IC10 aber fest an +5 V (TP3). Möglich ist eine Bestückungsvariante, also eine Brücke bzw. ein 0-Ω-Widerstand nahe IC10 oder auf dem Controller-Board. **Board um IC10 Pin 14 auf eine Lötbrücke oder einen Jumper absuchen.** Dann wäre die Kette ohne Leiterbahn-Umbau frei beschreibbar.
+
+**Weitere Quellen im Netz (Recherche 2026-10-15):**
+- Handbücher (BASH-Spiegel UIC, siehe oben): außerdem Router (z31215) und Power Router (z31315, mit Schaltplänen; erzeugt die FWD/REFL-Spannungen für die HPCU-Bargraphs).
+- HTML-Fassungen der BSMS-Handbücher und Beginners Guide: http://triton.iqfr.csic.es/guide/man/bsms/chap1.1.htm, http://triton.iqfr.csic.es/guide/man/beginners/chap6-2.htm
+- Gebrauchtangebote mit Fotos: eBay (Z012706, auch „/1005“, mit Kabel 22887), LabX, IET (https://www.ietltd.com//NMR/BSMS-Boss-Keyboard/).
+- **Keine** Schaltpläne der Tastatur und **keine** Bastelprojekte (Umbau, Arduino, MIDI) gefunden. Das Projekt hier ist vermutlich das erste dieser Art.
 
 ## Nützliche IC-Pinouts zum Durchklingeln
 

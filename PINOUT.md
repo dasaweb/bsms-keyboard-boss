@@ -247,6 +247,7 @@ Stand 2026-10-14: Es war keine 5-V-Buchse mehr frei, deshalb versorgt der Sketch
 
 - **Spalten** (`logs/led_finder_2026-10-12_075909.json`): **P46 (A14) = Spalte 1, P47 (A7) = 2, P48 (A15) = 3, P49 (D2) = 4, P50 (D8) = 5, P51 (D3) = 6**. Getestet in Zeile P04: P46 ONAXIS, P47 AUTO SHIM, P48 DIFF. MODE, P49 STD BY, P50 FINE, P51 2nd. Die Reihenfolge ist also dieselbe wie bei den Tasten (SW-Nummer aufsteigend).
 - **Eine LED einschalten:** Zeile HIGH, Spalten-Ader HIGH (alle anderen Spalten LOW), P26 LOW. Multiplexen: immer nur eine Zeile gleichzeitig.
+- **Bedeutung laut BSMS-Frontfolie (vermutet, 2026-10-15):** LED20 SAMPLE UP, LED21 SAMPLE DOWN, LED22 SAMPLE MISSING, LED23 FUNCTION 2ND, LED24 FUNCTION MENU. Bei der HPCU-Variante heißen sie MAS STATUS AUTO / MAIN ON / SPIN LOCK und FUNCTION 2nd / MENU; LED27 ist dort evtl. bestückt.
 - **Status-LEDs in Zeile P02** (`logs/led_finder_2026-10-12_155548.json`): P46 = LED20 (rot), P47 = LED21 (grün), P48 = LED22 (rot), P49 = LED27 (nicht bestückt; Lötpads zwischen LED22 und LED23, per Multimeter bestätigt), P50 = LED23 (rot), P51 = LED24 (rot). Die Tasten CHAN. SELECT und TRANS. P-DOWN (Direkttasten) haben in Zeile P14 keine sichtbare LED.
 - Bargraph LED25: bei P26 = LOW leuchten 6 von 10 Segmenten, bei zusätzlich P57 = LOW nur noch 2. Noch ungeklärt.
 
