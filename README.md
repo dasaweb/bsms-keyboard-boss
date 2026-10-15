@@ -58,9 +58,9 @@ Dieselbe Tastatur gab es in mindestens drei Varianten. Sie haben dasselbe Gehäu
 | Z032706 | B-HPCU | High Power Control Unit für Festkörper-NMR (Verstärker, 4-Phasen-Modulator, MAS) |
 
 <p align="center">
-  <img src="docs/img/bsms_keyboard_boss_layout.png" width="220" alt="BOSS">
-  <img src="docs/img/bsms_keyboard_hr20_layout.png" width="220" alt="HR-20">
-  <img src="docs/img/hpcu_keyboard_layout.png" width="170" alt="B-HPCU">
+  <img src="docs/img/bsms_keyboard_boss_layout.png" height="460" alt="BOSS">
+  <img src="docs/img/bsms_keyboard_hr20_layout.png" height="460" alt="HR-20">
+  <img src="docs/img/hpcu_keyboard_layout.png" height="460" alt="B-HPCU">
 </p>
 <p align="center"><sub>BOSS (z31185 Fig. 2) · HR-20 (z31185 Fig. 3) · B-HPCU (z31314 Fig. 10.1)</sub></p>
 
@@ -198,6 +198,13 @@ Ziel ist ein kompaktes Gerät, das ins vorhandene Gehäuse passt. Es soll sich a
 - Mega + ESP32-S3 als USB/Bluetooth/WLAN-Brücke.
 - RP2350B-Modul (48 GPIO) mit Pegelwandlern.
 - Zum schnellen Ausprobieren: ein PC-Programm, das die serielle Ausgabe in MIDI umsetzt.
+
+**Smarthome:** Die Tastatur eignet sich auch als **Home-Assistant-/MQTT-Bedienteil**:
+- Tasten schalten Lichter und Szenen, ihre LEDs zeigen den echten Zustand.
+- Das Drehrad dimmt oder regelt.
+- Das Display zeigt Uhrzeit, Temperaturen und Nachrichten, die Bargraphs Pegel wie PV-Leistung und Verbrauch.
+- Per MQTT-Discovery erscheinen alle Elemente automatisch in Home Assistant.
+- Prototyp: eine Python-Brücke Seriell ↔ MQTT. Endausbau: Pico 2 W direkt per WLAN.
 
 **MIDI:** USB-MIDI ist am einfachsten und braucht keinen Treiber. Ein klassischer 5-poliger DIN-Ausgang ist mit UART + 2 Widerständen nebenbei möglich.
 

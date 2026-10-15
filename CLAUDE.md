@@ -273,6 +273,22 @@ HDSP-2112-Ansteuerung (Quelle: arnowelzel.de/en/hdsp-211x, Datenblatt Broadcom A
       - **Es muss ein RP2350 sein (Pico 2), nicht der RP2040 (Pico 1).** Nur der RP2350 hat 5-V-tolerante Eingänge, und Tasten-Spalten und Encoder liefern 5 V. Vor dem Layout im Datenblatt verifizieren. Die 5-V-Toleranz gilt vermutlich nur bei versorgtem IOVDD, also keine 5 V an den Pico legen, solange er stromlos ist.
       - **Pico 2 W** = gleiche GPIO-Zahl plus WLAN/Bluetooth: USB-HID/MIDI, BLE-MIDI/HID, NTP-Uhr, Flashen per USB, alles auf einem kleinen, günstigen Board.
     - **MIDI über DIN** geht mit jeder Option nebenbei: UART-TX (z. B. Serial1 des Mega) + 2 Widerstände + DIN-Buchse. Für den MIDI-Eingang bräuchte es einen Optokoppler.
+  - **Weitere Anwendung: Smarthome-Controller (Idee des Nutzers, 2026-10-15)**, z. B. für Home Assistant oder allgemein als MQTT-Schnittstelle:
+    - **Eingaben:** Tasten (kurz/lang) schalten Lichter und Szenen. Das Drehrad dimmt bzw. regelt Lautstärke oder Heizung.
+    - **Anzeigen:**
+      - Tasten-LEDs zeigen den echten Zustand aus HA.
+      - Display: Uhrzeit, Temperaturen, Nachrichten, Werte beim Drehen.
+      - Bargraphs als Pegel, z. B. PV-Leistung und Verbrauch.
+      - Status- und Router-LEDs für Meldungen bzw. Alarme (blinkend).
+    - **Umsetzung:** MQTT mit **Home-Assistant-Discovery**. Das Gerät legt seine Entitäten selbst an:
+      - Tasten → `event`
+      - LEDs → `switch`/`light` (an/aus/blinkt)
+      - Display → `text`
+      - Drehrad → `number` bzw. relative Ereignisse
+      - Kette/Bars → `number` 0–40
+    - **Prototyp ohne neue Hardware:** Python-Brücke Seriell ↔ MQTT (paho-mqtt) auf PC/Raspberry Pi. `keys` liefert bereits alle Meldungen und Befehle (`D/U SWn`, `E`, `L`, `S`, `C`, `W`, `Z`). Dafür müssten die Tastenfunktionen per `T0` abschaltbar sein, damit HA allein steuert.
+    - **Endausbau:** Pico 2 W per WLAN direkt an MQTT, kein PC nötig (spricht zusätzlich für Option E). Alternative ESP32-S3 + ESPHome (RP2350-Unterstützung von ESPHome noch prüfen).
+    - MIDI, HID und MQTT als Modi in **einer** Firmware, umschaltbar z. B. per 2nd + Taste.
   - **Empfehlung Claude:** Erst A ausprobieren (Software, ohne neue Hardware). Das Shield so planen, dass optional ein ESP32-S3-Modul (B) und ein MIDI-DIN-Ausgang bestückt werden können. Vorher ein PC-Programm „seriell → MIDI“ als schneller Test.
   - **Versorgung (vor dem PCB klären):** Strom messen: Leerlauf, alle LEDs an (`A1`), Displays auf 100 %, Selbsttest. Favorit: 9–12-V-Netzteil → Step-Down 5 V (Logik und Displays, am Mega-Regler vorbei) und VS (TP2) direkt aus 9–12 V. Nur USB mit Step-Up auf 12 V ist wegen 500 mA (2,5 W) vermutlich zu knapp.
   - **PCB:** KiCad, Fertigung z. B. JLCPCB/Aisler. Der Nutzer hat noch keine Platine entworfen, Claude führt Schritt für Schritt. Die Ader-zu-Pin-Zuordnung darf für ein gutes Routing neu gewählt werden; im Sketch ändern sich dann nur die Pin-Tabellen.
