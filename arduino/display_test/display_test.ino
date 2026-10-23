@@ -11,12 +11,12 @@
 //   ?        Status
 
 const uint8_t PIN_RST = A3;   // P39
-const uint8_t PIN_FL  = 41;   // P20
+const uint8_t PIN_FL  = 41;   // P22
 const uint8_t PIN_WR  = 10;   // P54
 const uint8_t PIN_RD  = 4;    // P53
-const uint8_t PIN_CE[2] = {37, 39};  // P16 = DIS1, P18 = DIS2
-const uint8_t ADDR[5] = {43, 46, 48, 50, 52};               // A0-A4 = P22, P25, P27, P29, P31
-const uint8_t DATA[8] = {A10, A2, A9, A1, A8, A0, 51, 49};  // D0-D7 = P38, P37, P36, P35, P34, P33, P30, P28
+const uint8_t PIN_CE[2] = {37, 39};  // P18 = DIS1, P20 = DIS2
+const uint8_t ADDR[5] = {43, 46, 48, 50, 52};               // A0-A4 = P24, P25, P27, P29, P31
+const uint8_t DATA[8] = {A10, A2, A9, A1, A8, A0, 51, 49};  // D0-D7 = P38, P37, P36, P35, P34, P33, P32, P30
 
 uint8_t brightness = 3;   // 40 %, schont das Netzteil
 

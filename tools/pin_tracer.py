@@ -1,6 +1,6 @@
 """Interaktive Leitungsverfolgung: Welche Kabelader kommt an welchem IC-Pin an?
 
-Voraussetzung: Sketch arduino/pin_tracer ist auf dem Mega, Board versorgt (P60/P11 an 5V),
+Voraussetzung: Sketch arduino/pin_tracer ist auf dem Mega, Board versorgt (P11 an 5V, P60 an D14),
 ein Jumperkabel steckt in D13 und dient als Messspitze.
 TP2 (P17) NICHT an VIN, sondern abgezogen lassen (dann liegt nirgends mehr als 5 V an).
 Aufruf (Windows, PowerShell, im Projektordner):
@@ -9,7 +9,7 @@ Aufruf (Windows, PowerShell, im Projektordner):
 Vorgaben: "led" = IC1/IC3 Pin 1-8 (Standard), "router" = 74HC595 IC10-IC14 Pin 10-14
 (/SRCLR, SRCLK, RCLK, /OE, SER), "dis1"/"dis2" = alle 28 Lötpunkte eines HDSP-2112 nach Lage
 auf der Rückseite (oben01-14, unten01-14, je von links). Statt einer Vorgabe können auch Punktnamen folgen.
-Argumente mit "+" werden als Basis dauerhaft gehalten, z. B. +L26 = P26 LOW
+Argumente mit "+" werden als Basis dauerhaft gehalten, z. B. +L28 = P28 LOW (/OE der 595-Kette und des 245; vor 2026-10-23 hieß sie P26)
 (gibt den 74HC245 und die 595-Ausgänge frei).
 
 Ablauf: Das Programm nennt einen IC-Pin. Messspitze (D13-Kabel) an den Pin halten, Enter drücken,

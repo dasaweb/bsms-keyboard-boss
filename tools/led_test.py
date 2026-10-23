@@ -34,7 +34,7 @@ MATRIX = [
     ["SW30 ONAXIS", "SW31 AUTO SHIM", "SW32 DIFF. MODE", "SW33 STD BY", "SW34 FINE", "SW35 2nd"],
     ["LED20 (rot)", "LED21 (grün)", "LED22 (rot)", "LED27 (nicht bestückt)", "LED23 (rot)", "LED24 (rot)"],
 ]
-ROW_NAMES = ["P14", "P12", "P10", "P08", "P06", "P04", "P02"]
+ROW_NAMES = ["P16", "P14", "P12", "P10", "P08", "P06", "P04"]
 
 
 def describe(step):

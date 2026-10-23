@@ -105,21 +105,21 @@ Zeilen **aktiv HIGH** (74HC05-Eingänge mit Pull-down), Spalten **aktiv LOW** (P
 
 | Zeile ↓ / Spalte → | P45 (A6) | P44 (A13) | P43 (A5) | P42 (A12) | P41 (A4) | P40 (A11) |
 |---|---|---|---|---|---|---|
-| **P14** (D35) | SW1 LIFT ON-OFF | SW2 SPIN RATE | SW3 SPIN ON-OFF | – | – | – |
-| **P12** (D33) | SW6 FIELD | SW7 LOCK PHASE | SW8 LOCK POWER | SW9 LOCK GAIN | SW10 SWEEP | SW11 SWEEP AMPL. |
-| **P10** (D31) | SW12 HE LEVEL | SW13 (leer) | SW14 LOCK ON-OFF | SW15 AUTO LOCK | SW16 LOCK DC | SW17 LOCK SHIFT |
-| **P08** (D29) | SW18 Z0 | SW19 Z1 | SW20 Z2 | SW21 Z3 | SW22 Z4 | SW23 Z5 |
-| **P06** (D27) | SW24 X | SW25 Y | SW26 X²-Y² | SW27 XY | SW28 X³ | SW29 Y³ |
-| **P04** (D25) | SW30 ONAXIS | SW31 AUTO SHIM | SW32 DIFF. MODE | SW33 STD BY | SW34 FINE | SW35 2nd |
+| **P16** (D35) | SW1 LIFT ON-OFF | SW2 SPIN RATE | SW3 SPIN ON-OFF | – | – | – |
+| **P14** (D33) | SW6 FIELD | SW7 LOCK PHASE | SW8 LOCK POWER | SW9 LOCK GAIN | SW10 SWEEP | SW11 SWEEP AMPL. |
+| **P12** (D31) | SW12 HE LEVEL | SW13 (leer) | SW14 LOCK ON-OFF | SW15 AUTO LOCK | SW16 LOCK DC | SW17 LOCK SHIFT |
+| **P10** (D29) | SW18 Z0 | SW19 Z1 | SW20 Z2 | SW21 Z3 | SW22 Z4 | SW23 Z5 |
+| **P08** (D27) | SW24 X | SW25 Y | SW26 X²-Y² | SW27 XY | SW28 X³ | SW29 Y³ |
+| **P06** (D25) | SW30 ONAXIS | SW31 AUTO SHIM | SW32 DIFF. MODE | SW33 STD BY | SW34 FINE | SW35 2nd |
 
 Direkttasten, aktiv LOW: **P59 (D7) = SW4 CHAN. SELECT**, **P58 (D12) = SW5 TRANS. P-DOWN**.
 
 ### LED-Matrix
 
-- **Die Tastenzeilen sind gleichzeitig die LED-Zeilen.** Dazu kommt P02 (D23) als 7. Zeile für die Status-LEDs. Zeile HIGH = aktiv, Low-Side über den ULN2804A.
-- **Spalten = Bus P46–P51** (A14, A7, A15, D2, D8, D3), HIGH = an. Er läuft über den 74HC245 auf den UDN2982A, freigegeben mit **P26 (D47) = LOW**.
+- **Die Tastenzeilen sind gleichzeitig die LED-Zeilen.** Dazu kommt P04 (D23) als 7. Zeile für die Status-LEDs. Zeile HIGH = aktiv, Low-Side über den ULN2804A.
+- **Spalten = Bus P46–P51** (A14, A7, A15, D2, D8, D3), HIGH = an. Er läuft über den 74HC245 auf den UDN2982A, freigegeben mit **P28 (D47) = LOW**.
 - Gemultiplext wird immer eine Zeile zur Zeit. Spalte 1–6 entspricht derselben Reihenfolge wie die Tastenspalten.
-- Zeile P02: Spalte 1 LED20 (rot), 2 LED21 (grün), 3 LED22 (rot), 4 LED27 (nicht bestückt), 5 LED23 (rot), 6 LED24 (rot).
+- Zeile P04: Spalte 1 LED20 (rot), 2 LED21 (grün), 3 LED22 (rot), 4 LED27 (nicht bestückt), 5 LED23 (rot), 6 LED24 (rot).
 - CHAN. SELECT hat keine LED. Die LED von TRANS. P-DOWN sitzt in der 595-Kette.
 
 ### Router-Display: 74HC595-Kette (IC10 → IC14)
@@ -128,7 +128,7 @@ Direkttasten, aktiv LOW: **P59 (D7) = SW4 CHAN. SELECT**, **P58 (D12) = SW5 TRAN
 |---|---|---|
 | 11 SRCLK | Schiebetakt | P56 (D11) |
 | 12 RCLK | Übernahme | P57 (D6) |
-| 13 /OE | Ausgänge frei bei LOW | P26 (D47), **gemeinsam mit /OE des 74HC245** |
+| 13 /OE | Ausgänge frei bei LOW | P28 (D47), **gemeinsam mit /OE des 74HC245** |
 | 10 /SRCLR | Löschen | P55 (D5) |
 | 14 SER (IC10) | Dateneingang DLED | **P60 (D14)** |
 
@@ -156,18 +156,18 @@ Abhilfe wäre ein kleiner Umbau: die Leiterbahn an IC10 Pin 14 auftrennen und au
 
 | HDSP-Pin | Signal | Ader | Mega |
 |---|---|---|---|
-| 19, 20, 23–28 | D0–D7 | P38, P37, P36, P35, P34, P33, P30, P28 | A10, A2, A9, A1, A8, A0, D51, D49 |
-| 3–6, 10 | A0–A4 | P22, P25, P27, P29, P31 | D43, D46, D48, D50, D52 |
+| 19, 20, 23–28 | D0–D7 | P38, P37, P36, P35, P34, P33, P32, P30 | A10, A2, A9, A1, A8, A0, D51, D49 |
+| 3–6, 10 | A0–A4 | P24, P25, P27, P29, P31 | D43, D46, D48, D50, D52 |
 | 13 | /WR | P54 | D10 |
 | 18 | /RD | P53 | D4 |
-| 17 | /CE DIS1 / DIS2 | P16 / P18 | D37 / D39 |
-| 2 | /FL | P20 | D41 |
+| 17 | /CE DIS1 / DIS2 | P18 / P20 | D37 / D39 |
+| 2 | /FL | P22 | D41 |
 | 1 | /RST | P39 | A3 |
 | 11 /CLS, 12 CLK | DIS2 = Takt-Master, DIS1 = Slave | – | – |
 
 Pro Display gibt es 16 selbstdefinierbare 5×7-Zeichen (UDC): 4 nutzt das animierte Strichmännchen, 12 sind Ä Ö Ü ä ö ü ß und ☺ ☹ ♥ ♪ ★.
 
-Noch ohne bekannte Funktion: **P24, P32**.
+Noch ohne bekannte Funktion: **P26** (D45) und **P02** (nicht angeschlossen).
 
 ### Encoder
 

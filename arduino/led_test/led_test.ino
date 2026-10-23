@@ -2,13 +2,13 @@
 //
 // Schritte 0-40:  595-Kette (Router-LEDs, Bargraphs, TRANS. P-DOWN) mit k Einsen gefuellt,
 //                 d. h. die ersten k Ausgaenge leuchten (SER ist fest auf +5 V verdrahtet).
-// Schritte 41-82: Matrix-LEDs einzeln, Zeile r = 0-6 (P14 P12 P10 P08 P06 P04 P02), Spalte c = 0-5
+// Schritte 41-82: Matrix-LEDs einzeln, Zeile r = 0-6 (P16 P14 P12 P10 P08 P06 P04), Spalte c = 0-5
 //                 (Bus P46-P51); Schritt = 41 + r*6 + c. Die Kette ist dabei geloescht.
 // Steuerung (115200 Baud, einzelne Zeichen): n = weiter, b = zurueck, a = Automatik an/aus,
 //   0 = zum Anfang, m = zu den Matrix-LEDs. Ausgabe: "STEP <i>".
-// Pins: P26 (D47) = /OE von 74HC245 und 595, P55 (D5) = /SRCLR, P56 (D11) = SRCLK, P57 (D6) = RCLK.
+// Pins: P28 (D47) = /OE von 74HC245 und 595, P55 (D5) = /SRCLR, P56 (D11) = SRCLK, P57 (D6) = RCLK.
 
-const uint8_t ROWS[7] = {35, 33, 31, 29, 27, 25, 23};   // P14 P12 P10 P08 P06 P04 P02
+const uint8_t ROWS[7] = {35, 33, 31, 29, 27, 25, 23};   // P16 P14 P12 P10 P08 P06 P04
 const uint8_t BUS[6]  = {A14, A7, A15, 2, 8, 3};        // P46 P47 P48 P49 P50 P51
 const uint8_t PIN_OE = 47, PIN_CLR = 5, PIN_SRCLK = 11, PIN_RCLK = 6;
 const uint8_t CHAIN = 40, LAST = 41 + 7 * 6 - 1;

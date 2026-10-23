@@ -2,16 +2,16 @@
 // (Board VERSORGT, fuer die LEDs TP2 = VS an VIN)
 //
 // Matrix (ermittelt 2026-10-09 mit tools/matrix_finder.py, siehe PINOUT.md):
-//   6 Zeilen P14, P12, P10, P08, P06, P04 = Eingaenge des 74HC05 (IC2) und des ULN2804A (IC3),
+//   6 Zeilen P16, P14, P12, P10, P08, P06 = Eingaenge des 74HC05 (IC2) und des ULN2804A (IC3),
 //     mit Pull-down auf dem Board; Zeile aktiv = HIGH treiben.
 //   6 Tasten-Spalten P45, P44, P43, P42, P41, P40, mit Pull-ups auf dem Board; Taste gedrueckt
 //     in aktiver Zeile = LOW.
 //   Direkt verdrahtet (LOW = gedrueckt): P59 = CHAN. SELECT (SW4), P58 = TRANS. P-DOWN (SW5).
 // LEDs (ermittelt 2026-10-12 mit tools/led_finder.py und led_test):
-//   LED-Zeilen = Tasten-Zeilen, dazu P02 = Status-LEDs (Spalte 1 LED20, 2 LED21, 3 LED22,
+//   LED-Zeilen = Tasten-Zeilen, dazu P04 = Status-LEDs (Spalte 1 LED20, 2 LED21, 3 LED22,
 //   4 LED27 unbestueckt, 5 LED23, 6 LED24).
 //   LED-Spalten = Bus P46-P51 (HIGH = an), ueber 74HC245 (IC4) auf UDN2982A (IC1);
-//   P26 = /OE des 245 UND der 595-Kette. Multiplex: eine Zeile zur Zeit.
+//   P28 = /OE des 245 UND der 595-Kette. Multiplex: eine Zeile zur Zeit.
 //   595-Kette: P60 = DLED (SER von IC10, an D14), P56 = SRCLK, P57 = RCLK, P55 = /SRCLR (bleibt HIGH).
 //   40 Positionen, frei schaltbar (seit 2026-10-23, vorher hing P60 irrtuemlich an 5 V):
 //   1-10 Bargraph LED25 gruen (FWD), 11-20 LED26 rot (REFL), 21-40 LED1-19 und die LED in TRANS. P-DOWN
@@ -61,10 +61,10 @@
 //   Z<sek>     Uhr stellen: Ortszeit als Sekunden seit 1.1.1970 (die GUI schickt das beim Start und jede Minute)
 //   H<0-7>     Display-Helligkeit (0 = 100 %, 3 = 40 %, 6 = 13 %, 7 = aus)
 
-const uint8_t ROWS[7] = {35, 33, 31, 29, 27, 25, 23};      // P14 P12 P10 P08 P06 P04, P02 (nur LEDs)
+const uint8_t ROWS[7] = {35, 33, 31, 29, 27, 25, 23};      // P16 P14 P12 P10 P08 P06, P04 (nur LEDs)
 const uint8_t COLS[6] = {A6, A13, A5, A12, A4, A11};       // P45 P44 P43 P42 P41 P40
 const uint8_t BUS[6]  = {A14, A7, A15, 2, 8, 3};           // P46 P47 P48 P49 P50 P51
-const uint8_t PIN_OE = 47;                                  // P26, /OE von 74HC245 und 595
+const uint8_t PIN_OE = 47;                                  // P28, /OE von 74HC245 und 595
 const uint8_t PIN_CLR = 5, PIN_SRCLK = 11, PIN_RCLK = 6;    // P55, P56, P57
 const uint8_t PIN_DLED = 14;                                // P60, SER von IC10
 const uint8_t PIN_CHAN_SELECT = 7;                          // P59
@@ -83,10 +83,10 @@ const uint8_t ENC_DIV = 24;                                // Encoder-Schritte j
 const uint8_t ENC_MAN_DIV = 8;                             // Encoder-Schritte je Pixel des Maennchens                        // Tastenwiederholung FINE (Helligkeit)
 
 // Displays HDSP-2112: gemeinsamer Bus, eigenes /CE je Display
-const uint8_t PIN_DRST = A3, PIN_DFL = 41, PIN_DWR = 10, PIN_DRD = 4;   // P39, P20, P54, P53
-const uint8_t PIN_DCE[2] = {39, 37};                         // P18 = DIS2 (links), P16 = DIS1 (rechts)
-const uint8_t DADDR[5] = {43, 46, 48, 50, 52};               // A0-A4 = P22, P25, P27, P29, P31
-const uint8_t DDATA[8] = {A10, A2, A9, A1, A8, A0, 51, 49};  // D0-D7 = P38, P37, P36, P35, P34, P33, P30, P28
+const uint8_t PIN_DRST = A3, PIN_DFL = 41, PIN_DWR = 10, PIN_DRD = 4;   // P39, P22, P54, P53
+const uint8_t PIN_DCE[2] = {39, 37};                         // P20 = DIS2 (links), P18 = DIS1 (rechts)
+const uint8_t DADDR[5] = {43, 46, 48, 50, 52};               // A0-A4 = P24, P25, P27, P29, P31
+const uint8_t DDATA[8] = {A10, A2, A9, A1, A8, A0, 51, 49};  // D0-D7 = P38, P37, P36, P35, P34, P33, P32, P30
 const char *const BRIGHT_PCT[8] = {"100", "80", "53", "40", "27", "20", "13", "0"};
 
 // SW-Nummer je Zeile/Spalte, 0 = keine Taste

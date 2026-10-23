@@ -8,12 +8,12 @@ Aufruf (Windows, PowerShell, im Projektordner):
 
 wackel: läuft automatisch. Die Kette wird mit k Einsen gefüllt (40 = alle Router-LEDs an, 0 = alle aus),
         dann flackert jede Ader am Mega 2 s lang schnell (4 Hz), danach kommt die nächste.
-        Zu Beginn flackert zur Probe P26 (/OE): So sieht ein Treffer aus.
+        Zu Beginn flackert zur Probe P28 (/OE): So sieht ein Treffer aus.
         Nur auf die OBEREN LEDs achten (Router-LEDs, Bargraphs, LED in TRANS. P-DOWN). Unten flackern
         bei den Zeilen-Adern die Tasten-LEDs, das ist normal.
         Flackert oben etwas: beliebige Taste drücken. Wegen der Reaktionszeit werden die aktuelle und
         die vorige Ader vermerkt. Am Ende werden alle Verdächtigen einzeln wiederholt. q = Abbruch.
-zufall: Die vier Kettensignale (P26, P55, P56, P57) bekommen endlos Zufallsfolgen. Normal sind nur
+zufall: Die vier Kettensignale (P28, P55, P56, P57) bekommen endlos Zufallsfolgen. Normal sind nur
         Muster "die ersten k an" (Bargraph grün füllt sich zuerst). Leuchtet ein Muster mit Lücke,
         z. B. eine einzelne LED weiter hinten: sofort eine Taste drücken. Die letzten Schritte werden
         gespeichert. q = Ende.
@@ -33,26 +33,25 @@ import serial
 
 # Ader -> (Funktion, erwarteter Effekt beim Wackeln)
 WIRES = {
-    2: ("LED-Zeile Status (LED20-24)", "Status-LEDs LED20-24 blinken mit (nur mit Netzteil)"),
-    4: ("Zeile 6 (SW30-35)", "Tasten-LEDs dieser Zeile blinken mit (nur mit Netzteil)"),
-    6: ("Zeile 5 (SW24-29)", "Tasten-LEDs dieser Zeile blinken mit (nur mit Netzteil)"),
-    8: ("Zeile 4 (SW18-23)", "Tasten-LEDs dieser Zeile blinken mit (nur mit Netzteil)"),
-    10: ("Zeile 3 (SW12-17)", "Tasten-LEDs dieser Zeile blinken mit (nur mit Netzteil)"),
-    12: ("Zeile 2 (SW6-11)", "Tasten-LEDs dieser Zeile blinken mit (nur mit Netzteil)"),
-    14: ("Zeile 1 (SW1-3)", "Tasten-LEDs dieser Zeile blinken mit (nur mit Netzteil)"),
-    16: ("Display DIS1 /CE", "nichts"),
-    18: ("Display DIS2 /CE", "nichts"),
-    20: ("Display /FL", "nichts"),
-    22: ("Display A0", "nichts"),
-    24: ("FREI, unbekannt", "??? (Kandidat!)"),
+    4: ("LED-Zeile Status (LED20-24)", "Status-LEDs LED20-24 blinken mit (nur mit Netzteil)"),
+    6: ("Zeile 6 (SW30-35)", "Tasten-LEDs dieser Zeile blinken mit (nur mit Netzteil)"),
+    8: ("Zeile 5 (SW24-29)", "Tasten-LEDs dieser Zeile blinken mit (nur mit Netzteil)"),
+    10: ("Zeile 4 (SW18-23)", "Tasten-LEDs dieser Zeile blinken mit (nur mit Netzteil)"),
+    12: ("Zeile 3 (SW12-17)", "Tasten-LEDs dieser Zeile blinken mit (nur mit Netzteil)"),
+    14: ("Zeile 2 (SW6-11)", "Tasten-LEDs dieser Zeile blinken mit (nur mit Netzteil)"),
+    16: ("Zeile 1 (SW1-3)", "Tasten-LEDs dieser Zeile blinken mit (nur mit Netzteil)"),
+    18: ("Display DIS1 /CE", "nichts"),
+    20: ("Display DIS2 /CE", "nichts"),
+    22: ("Display /FL", "nichts"),
+    24: ("Display A0", "nichts"),
+    26: ("FREI, unbekannt", "??? (Kandidat!)"),
     25: ("Display A1", "nichts"),
-    26: ("/OE Kette + 245", "alle Router-LEDs blinken gemeinsam"),
+    28: ("/OE Kette + 245", "alle Router-LEDs blinken gemeinsam"),
     27: ("Display A2", "nichts"),
-    28: ("Display D7", "nichts"),
+    30: ("Display D7", "nichts"),
     29: ("Display A3", "nichts"),
-    30: ("Display D6", "nichts"),
+    32: ("Display D6", "nichts"),
     31: ("Display A4", "nichts"),
-    32: ("FREI, unbekannt", "??? (Kandidat!)"),
     33: ("Display D5", "nichts"),
     34: ("Display D4", "nichts"),
     35: ("Display D3", "nichts"),
@@ -125,8 +124,8 @@ HALF_MS, COUNT = 125, 8   # 4 Hz, 2 s je Ader
 def wackel(brute, ks, logfile):
     results = {"modus": "wackel", "durchgaenge": ks, "treffer": [], "nachtest": []}
     brute.cmd(f"K{ks[0]}")
-    print("Probe: P26 (/OE) flackert jetzt. So sieht ein Treffer aus (hier flackert alles oben).")
-    brute.cmd(f"B26,{HALF_MS},{COUNT}")
+    print("Probe: P28 (/OE) flackert jetzt. So sieht ein Treffer aus (hier flackert alles oben).")
+    brute.cmd(f"B28,{HALF_MS},{COUNT}")
     input("Enter = Start. Ab jetzt nur noch eine Taste drücken, wenn OBEN etwas flackert. ")
 
     candidates = []
@@ -134,7 +133,7 @@ def wackel(brute, ks, logfile):
         print(f"\n--- Durchgang mit {k} Einsen in der Kette ({'alle oben an' if k == 40 else 'oben ' + str(k) + ' an'}) ---")
         prev = None
         for p, (name, _) in WIRES.items():
-            if p == 26:
+            if p == 28:
                 continue
             brute.cmd(f"K{k}")
             print(f"P{p:02d} {name}")

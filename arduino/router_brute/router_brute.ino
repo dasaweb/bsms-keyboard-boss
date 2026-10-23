@@ -7,7 +7,7 @@
 //           danach freigeben bzw. bei den Kettensignalen auf ihren Ruhepegel zurueck
 //   Z<ms>   Zufallstest der vier Kettensignale: je Schritt 1-8 schnelle Zufallszustaende,
 //           dann <ms> halten. Ausgabe "Z <schritt> <zustaende hex>"; jedes Zeichen stoppt ("STOP").
-//           Bit 0 = P26 (/OE), Bit 1 = P55 (/SRCLR), Bit 2 = P56 (SRCLK), Bit 3 = P57 (RCLK).
+//           Bit 0 = P28 (/OE), Bit 1 = P55 (/SRCLR), Bit 2 = P56 (SRCLK), Bit 3 = P57 (RCLK).
 //   R       alles freigeben (INPUT_PULLUP)
 // Antworten: "OK", "KONFLIKT L|H" (Board-Ausgang arbeitet dagegen, Pin sofort freigegeben), "?".
 // P60 ist DLED (SER von IC10, Messung M3 2026-10-23) und haengt an D14. D14 wird erst mit K/P
@@ -18,9 +18,9 @@
 struct Wire { uint8_t p; uint8_t pin; };
 
 const Wire WIRES[] = {
-  {2,23}, {4,25}, {6,27}, {8,29}, {10,31}, {12,33}, {14,35}, {16,37},
-  {18,39}, {20,41}, {22,43}, {24,45}, {25,46}, {26,47}, {27,48}, {28,49},
-  {29,50}, {30,51}, {31,52}, {32,53}, {33,A0}, {34,A8}, {35,A1}, {36,A9},
+  {4,23}, {6,25}, {8,27}, {10,29}, {12,31}, {14,33}, {16,35}, {18,37},
+  {20,39}, {22,41}, {24,43}, {26,45}, {25,46}, {28,47}, {27,48}, {30,49},
+  {29,50}, {32,51}, {31,52}, {33,A0}, {34,A8}, {35,A1}, {36,A9},
   {37,A2}, {38,A10}, {39,A3}, {40,A11}, {41,A4}, {42,A12}, {43,A5}, {44,A13},
   {45,A6}, {46,A14}, {47,A7}, {48,A15}, {49,2}, {50,8}, {51,3}, {52,9},
   {53,4}, {54,10}, {55,5}, {56,11}, {57,6}, {58,12}, {59,7},

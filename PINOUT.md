@@ -7,6 +7,8 @@
 - Ungerade Pins (P01, P03, …) liegen in der einen Reihe des Steckers, gerade Pins (P02, P04, …) in der anderen. P01 und P02 liegen am selben Ende.
 - Board-seitig: Leiterbahnen des Display-Boards heißen nach IC und Pin, z. B. `IC10.14` = Pin 14 von IC10.
 
+**⚠ Korrektur 2026-10-23:** Die Blöcke G1 und G2 waren auf dem Mega um einen Pin versetzt gesteckt (P02 auf dem 5V-Pin neben D23, D53 leer; bestätigt per Durchgang gegen Stecker-Pin 2 und 4). Alle geraden Nummern P02–P32 in dieser Datei sind korrigiert (alte Nummer + 2). **Logs und Tool-Ausgaben vor dem 2026-10-23 nutzen die alte Zählung** (dort heißt z. B. die /OE-Ader „P26“, richtig ist P28).
+
 ## Arduino-Mega-Zuordnung (Stand 2026-10-09, blockweise)
 
 Die Zuordnung ist so gewählt, dass die **ungerade Reihe** und die **gerade Reihe** des IDC-Steckers jeweils in 8er-Blöcken auf zusammenhängende Mega-Pins gehen:
@@ -17,8 +19,8 @@ Die Zuordnung ist so gewählt, dass die **ungerade Reihe** und die **gerade Reih
 | U2 | P17–P31 ungerade | P17 → D38, P19–P23 frei, P25/27/29/31 → D46/48/50/52 |
 | U3 | P33–P47 ungerade | A0–A7 |
 | U4 | P49–P63 ungerade | P49–P59 → D2–D7, P61 → D15, P63 frei |
-| G1 | P02–P16 gerade | D23, D25, …, D37 (ungerade Reihe der Doppelleiste) |
-| G2 | P18–P32 gerade | D39, D41, …, D53 |
+| G1 | P02–P16 gerade | P02 frei (bis 2026-10-23 versehentlich an 5V), P04–P16 → D23, D25, …, D35 (ungerade Reihe der Doppelleiste) |
+| G2 | P18–P32 gerade | D37, D39, …, D51 (D53 bleibt leer) |
 | G3 | P34–P48 gerade | A8–A15 |
 | G4 | P50–P64 gerade | P50–P58 → D8–D12, P60 → D14, P62/P64 frei |
 
@@ -70,12 +72,12 @@ Rohdaten so, wie sie gemeldet wurden: IC-Pin → Mega-Pin → Ader.
 
 | IC2-Pin | Funktion | Ader | Matrix |
 |---|---|---|---|
-| 1 | 1A | P14 (D35) | Zeile 1 |
-| 3 | 2A | P12 (D33) | Zeile 2 |
-| 5 | 3A | P10 (D31) | Zeile 3 |
-| 9 | 4A | P08 (D29) | Zeile 4 |
-| 11 | 5A | P06 (D27) | Zeile 5 |
-| 13 | 6A | P04 (D25) | Zeile 6 |
+| 1 | 1A | P16 (D35) | Zeile 1 |
+| 3 | 2A | P14 (D33) | Zeile 2 |
+| 5 | 3A | P12 (D31) | Zeile 3 |
+| 9 | 4A | P10 (D29) | Zeile 4 |
+| 11 | 5A | P08 (D27) | Zeile 5 |
+| 13 | 6A | P06 (D25) | Zeile 6 |
 
 - Die Eingänge haben **Pull-downs** auf dem Board, deshalb sind sie im Ruhezustand LOW.
 - **HIGH treiben = Zeile aktiv:** Der Open-Drain-Ausgang zieht dann die Tastenzeile auf GND.
@@ -88,23 +90,23 @@ Rohdaten so, wie sie gemeldet wurden: IC-Pin → Mega-Pin → Ader.
 
 | Zeile ↓ / Spalte → | **P45** (A6) | **P44** (A13) | **P43** (A5) | **P42** (A12) | **P41** (A4) | **P40** (A11) |
 |---|---|---|---|---|---|---|
-| **P14** (D35) | SW1 LIFT ON-OFF | SW2 SPIN RATE | SW3 SPIN ON-OFF | – | – | – |
-| **P12** (D33) | SW6 FIELD | SW7 LOCK PHASE | SW8 LOCK POWER | SW9 LOCK GAIN | SW10 SWEEP | SW11 SWEEP AMPL. |
-| **P10** (D31) | SW12 HE LEVEL | SW13 (leer) | SW14 LOCK ON-OFF | SW15 AUTO LOCK | SW16 LOCK DC | SW17 LOCK SHIFT |
-| **P08** (D29) | SW18 Z0 | SW19 Z1 | SW20 Z2 | SW21 Z3 | SW22 Z4 | SW23 Z5 |
-| **P06** (D27) | SW24 X | SW25 Y | SW26 X²-Y² | SW27 XY | SW28 X³ | SW29 Y³ |
-| **P04** (D25) | SW30 ONAXIS | SW31 AUTO SHIM | SW32 DIFF. MODE | SW33 STD BY | SW34 FINE | SW35 2nd |
+| **P16** (D35) | SW1 LIFT ON-OFF | SW2 SPIN RATE | SW3 SPIN ON-OFF | – | – | – |
+| **P14** (D33) | SW6 FIELD | SW7 LOCK PHASE | SW8 LOCK POWER | SW9 LOCK GAIN | SW10 SWEEP | SW11 SWEEP AMPL. |
+| **P12** (D31) | SW12 HE LEVEL | SW13 (leer) | SW14 LOCK ON-OFF | SW15 AUTO LOCK | SW16 LOCK DC | SW17 LOCK SHIFT |
+| **P10** (D29) | SW18 Z0 | SW19 Z1 | SW20 Z2 | SW21 Z3 | SW22 Z4 | SW23 Z5 |
+| **P08** (D27) | SW24 X | SW25 Y | SW26 X²-Y² | SW27 XY | SW28 X³ | SW29 Y³ |
+| **P06** (D25) | SW30 ONAXIS | SW31 AUTO SHIM | SW32 DIFF. MODE | SW33 STD BY | SW34 FINE | SW35 2nd |
 
 Direkt verdrahtet, aktiv LOW: **P59 (D7) = SW4 CHAN. SELECT**, **P58 (D12) = SW5 TRANS. P-DOWN**.
 
-**IC4 (SN74HC245):** 1 (DIR)→nichts (auf dem Board fest verdrahtet), 2 (A1)→A14 (P46), 3 (A2)→A7 (P47), 4 (A3)→A15 (P48), 5 (A4)→D2 (P49), 6 (A5)→D8 (P50), 7 (A6)→D3 (P51), 8 (A7)→nicht gemessen, 9 (A8)→D47 (P26) ⚠, 10→GND ✔, 19 (/OE)→D47 (P26), 20→5V ✔
+**IC4 (SN74HC245):** 1 (DIR)→nichts (auf dem Board fest verdrahtet), 2 (A1)→A14 (P46), 3 (A2)→A7 (P47), 4 (A3)→A15 (P48), 5 (A4)→D2 (P49), 6 (A5)→D8 (P50), 7 (A6)→D3 (P51), 8 (A7)→nicht gemessen, 9 (A8)→D47 (P28) ⚠, 10→GND ✔, 19 (/OE)→D47 (P28), 20→5V ✔
 - A1–A6 liegen auf P46–P51 der Reihe nach. **Hypothese: Datenbus D0–D7 der HDSP-2112** über IC4 gepuffert.
-- **P26 = /OE von IC4**: in Ruhe HIGH, der Puffer ist also gesperrt.
-- ⚠ Pin 9 → D47 ist vermutlich ein Messfehler, weil P26 schon /OE ist. Erwartet wird P52/P53. Pin 8 fehlt noch.
+- **P28 = /OE von IC4**: in Ruhe HIGH, der Puffer ist also gesperrt.
+- ⚠ Pin 9 → D47 ist vermutlich ein Messfehler, weil P28 schon /OE ist. Erwartet wird P52/P53. Pin 8 fehlt noch.
 
-**IC10 (SN74HC595):** 11 (SRCLK)→D11 (P56), 12 (RCLK)→D47 (P26) ⚠ **falsch, richtig P57**, 13 (/OE)→nichts **falsch, richtig P26**, 14 (SER)→5V ⚠, 10 (/SRCLR)→5V ✔
+**IC10 (SN74HC595):** 11 (SRCLK)→D11 (P56), 12 (RCLK)→D47 (P28) ⚠ **falsch, richtig P57**, 13 (/OE)→nichts **falsch, richtig P28**, 14 (SER)→5V ⚠, 10 (/SRCLR)→5V ✔
 - **P56 = Schiebetakt CLK** der LED-Schieberegister.
-- ⚠ Dass RCLK auf P26 liegt (gleiche Ader wie IC4 /OE), ist unplausibel, bitte nachmessen.
+- ⚠ Dass RCLK auf P28 liegt (gleiche Ader wie IC4 /OE), ist unplausibel, bitte nachmessen.
 - ⚠ SER an 5V ist nur plausibel, wenn IC10 nicht das erste Glied der Kette ist. Den Daten-Eingang (DLED) am ersten 595 suchen: SER des Chips, dessen Pin 14 nicht an einem QH' (Pin 9) eines anderen hängt.
 
 ## Messtabelle (stromlos, Controller-Board abgesteckt)
@@ -116,37 +118,37 @@ Direkt verdrahtet, aktiv LOW: **P59 (D7) = SW4 CHAN. SELECT**, **P58 (D12) = SW5
 | Pin | Arduino | Diode zu GND | Diode von GND | Verbunden mit | Funktion (vermutet/bestätigt) |
 |---|---|---|---|---|---|
 | P01 | **GND** | | | JU1, = 74HC595 Pin 8 | **GND (bestätigt)** |
-| P02 | D23 | | | | |
+| P02 | – (frei) | | | | bis 2026-10-23 versehentlich an 5V; zieht keinen Strom (Messung B2), Funktion offen |
 | P03 | – (frei) | | | JU1, = 74HC595 Pin 8 | **GND (bestätigt)** |
-| P04 | D25 | | | IC2 (74HC05) Eingang | **Tastenmatrix Zeile 6 (aktiv HIGH)** |
+| P04 | D23 | | | ULN2804A (IC3) | **LED-Zeile Status-LEDs LED20–24 (aktiv HIGH)** |
 | P05 | – (frei) | | | JU1, = 74HC595 Pin 8 | **GND (bestätigt)** |
-| P06 | D27 | | | IC2 (74HC05) Eingang | **Tastenmatrix Zeile 5 (aktiv HIGH)** |
+| P06 | D25 | | | IC2 (74HC05) Eingang | **Tastenmatrix Zeile 6 (aktiv HIGH)** |
 | P07 | – (frei) | | | JU1, = 74HC595 Pin 8 | **GND (bestätigt)** |
-| P08 | D29 | | | IC2 (74HC05) Eingang | **Tastenmatrix Zeile 4 (aktiv HIGH)** |
+| P08 | D27 | | | IC2 (74HC05) Eingang | **Tastenmatrix Zeile 5 (aktiv HIGH)** |
 | P09 | – (frei) | | | JU1, = 74HC595 Pin 8 | **GND (bestätigt)** |
-| P10 | D31 | | | IC2 (74HC05) Eingang | **Tastenmatrix Zeile 3 (aktiv HIGH)** |
+| P10 | D29 | | | IC2 (74HC05) Eingang | **Tastenmatrix Zeile 4 (aktiv HIGH)** |
 | P11 | D32 | | | TP3 | **+5 V #2** (IC2, IC4, Displays; bestätigt) |
-| P12 | D33 | | | IC2 (74HC05) Eingang | **Tastenmatrix Zeile 2 (aktiv HIGH)** |
+| P12 | D31 | | | IC2 (74HC05) Eingang | **Tastenmatrix Zeile 3 (aktiv HIGH)** |
 | P13 | – (frei) | | | TP3 | **+5 V #2** (IC2, IC4, Displays; bestätigt) |
-| P14 | D35 | | | IC2 (74HC05) Eingang | **Tastenmatrix Zeile 1 (aktiv HIGH)** |
+| P14 | D33 | | | IC2 (74HC05) Eingang | **Tastenmatrix Zeile 2 (aktiv HIGH)** |
 | P15 | – (frei) | | | TP3 | **+5 V #2** (IC2, IC4, Displays; bestätigt) |
-| P16 | D37 | | | DIS1.17 | **Display /CE** (pin_tracer 2026-10-13) |
+| P16 | D35 | | | IC2 (74HC05) Eingang | **Tastenmatrix Zeile 1 (aktiv HIGH)** |
 | P17 | D38 | | | TP2 | LED-Versorgung VS (bestätigt) |
-| P18 | D39 | | | DIS2.17 | **Display DIS2 /CE** (pin_tracer 2026-10-13) |
+| P18 | D37 | | | DIS1.17 | **Display /CE** (pin_tracer 2026-10-13) |
 | P19 | – (frei) | | | TP2 | Rail, Funktion offen |
-| P20 | D41 | | | DIS1.2 | **Display /FL** (pin_tracer 2026-10-13) |
+| P20 | D39 | | | DIS2.17 | **Display DIS2 /CE** (pin_tracer 2026-10-13) |
 | P21 | – (frei) | | | TP2 | Rail, Funktion offen |
-| P22 | D43 | | | DIS1.3 | **Display A0** (pin_tracer 2026-10-13) |
+| P22 | D41 | | | DIS1.2 | **Display /FL** (pin_tracer 2026-10-13) |
 | P23 | – (frei) | | | TP2 | Rail, Funktion offen |
-| P24 | D45 | | | | |
+| P24 | D43 | | | DIS1.3 | **Display A0** (pin_tracer 2026-10-13) |
 | P25 | D46 | | | DIS1.4 | **Display A1** (pin_tracer 2026-10-13) |
-| P26 | D47 | | | | |
+| P26 | D45 | | | | frei, Board zieht sie auf HIGH, Funktion offen |
 | P27 | D48 | | | DIS1.5 | **Display A2** (pin_tracer 2026-10-13) |
-| P28 | D49 | | | DIS1.28 | **Display D7** (pin_tracer 2026-10-13) |
+| P28 | D47 | | | IC4.19, IC10–14.13 | **/OE von 74HC245 und 595-Kette (aktiv LOW)** |
 | P29 | D50 | | | DIS1.6 | **Display A3** (pin_tracer 2026-10-13) |
-| P30 | D51 | | | DIS1.27 | **Display D6** (pin_tracer 2026-10-13) |
+| P30 | D49 | | | DIS1.28 | **Display D7** (pin_tracer 2026-10-13) |
 | P31 | D52 | | | DIS1.10 | **Display A4** (pin_tracer 2026-10-13) |
-| P32 | D53 | | | | |
+| P32 | D51 | | | DIS1.27 | **Display D6** (pin_tracer 2026-10-13) |
 | P33 | A0 | | | DIS1.26 | **Display D5** (pin_tracer 2026-10-13) |
 | P34 | A8 | | | DIS1.25 | **Display D4** (pin_tracer 2026-10-13) |
 | P35 | A1 | | | DIS1.24 | **Display D3** (pin_tracer 2026-10-13) |
@@ -180,7 +182,7 @@ Direkt verdrahtet, aktiv LOW: **P59 (D7) = SW4 CHAN. SELECT**, **P58 (D12) = SW5
 | P63 | – (frei) | | | JU2 = IC3.9 (ULN2804A GND) | **Leistungs-GND der LED-Senken** (vermutet) |
 | P64 | – (frei) | | | JU2 = IC3.9 (ULN2804A GND) | **Leistungs-GND der LED-Senken** (vermutet) |
 
-## Displays HDSP-2112 (2026-10-13, `logs/pin_tracer_2026-10-13_085802.json`, Basis P26 LOW)
+## Displays HDSP-2112 (2026-10-13, `logs/pin_tracer_2026-10-13_085802.json`, Basis P28 LOW)
 
 DIS1 vollständig gemessen (Lötpunkte Rückseite, je Reihe von links). Alle 28 Punkte passen exakt aufs HDSP-2112-Pinout:
 Reihe **oben** = Pin 15→28, Reihe **unten** = Pin 14→1. Alle Signale **direkt** am Kabel, nicht über IC4 (74HC245).
@@ -188,8 +190,8 @@ Reihe **oben** = Pin 15→28, Reihe **unten** = Pin 14→1. Alle Signale **direk
 | HDSP-Pin | Signal | Ader | Mega | Lötpunkt |
 |---|---|---|---|---|
 | 1 | /RST | P39 | A3 | unten14 |
-| 2 | /FL | P20 | D41 | unten13 |
-| 3 | A0 | P22 | D43 | unten12 |
+| 2 | /FL | P22 | D41 | unten13 |
+| 3 | A0 | P24 | D43 | unten12 |
 | 4 | A1 | P25 | D46 | unten11 |
 | 5 | A2 | P27 | D48 | unten10 |
 | 6 | A3 | P29 | D50 | unten09 |
@@ -200,7 +202,7 @@ Reihe **oben** = Pin 15→28, Reihe **unten** = Pin 14→1. Alle Signale **direk
 | 13 | /WR | P54 | D10 | unten02 |
 | 14 | VDD | +5 V | – | unten01 |
 | 15/16 | GND | GND | – | oben01/02 |
-| 17 | /CE | P16 | D37 | oben03 |
+| 17 | /CE | P18 | D37 | oben03 |
 | 18 | /RD | P53 | D4 | oben04 |
 | 19 | D0 | P38 | A10 | oben05 |
 | 20 | D1 | P37 | A2 | oben06 |
@@ -209,15 +211,15 @@ Reihe **oben** = Pin 15→28, Reihe **unten** = Pin 14→1. Alle Signale **direk
 | 24 | D3 | P35 | A1 | oben10 |
 | 25 | D4 | P34 | A8 | oben11 |
 | 26 | D5 | P33 | A0 | oben12 |
-| 27 | D6 | P30 | D51 | oben13 |
-| 28 | D7 | P28 | D49 | oben14 |
+| 27 | D6 | P32 | D51 | oben13 |
+| 28 | D7 | P30 | D49 | oben14 |
 
 **DIS2** (`logs/pin_tracer_2026-10-13_090319.json`): gleiche Lage, gleiche Adern (Kontrolle: D0 = P38, /WR = P54, /RST = P39),
-außer **/CE = P18 (D39)**. **/CLS = HIGH**, also ist DIS2 der Takt-Master, sein CLK-Ausgang speist DIS1 (keine Kabelader).
+außer **/CE = P20 (D39)**. **/CLS = HIGH**, also ist DIS2 der Takt-Master, sein CLK-Ausgang speist DIS1 (keine Kabelader).
 
 **Lage auf der Front:** DIS2 links, DIS1 rechts (wie Platinen-Beschriftung); Zeichenposition 0 = links. Schreibtest mit `display_test` erfolgreich.
 
-Noch freie Adern ohne Funktion: **P24 (D45), P32 (D53)**.
+Noch freie Adern ohne Funktion: **P26 (D45)** und **P02** (nicht angeschlossen). D53 ist leer, dort hing nie eine Ader.
 
 ## Encoder (S1-256-BM6)
 
@@ -233,24 +235,24 @@ Stand 2026-10-14: Es war keine 5-V-Buchse mehr frei, deshalb versorgt der Sketch
 
 ## LED-Matrix (2026-10-12, TP2 = VS an VIN ca. 8,6 V)
 
-- **High-Side (Spalten):** IC1 (UDN2982A) Pin 1–6 ← B-Seite von IC4 (74HC245). Die A-Seite ist der Bus P46–P51. **P26 = /OE von IC4**; nur bei P26 = LOW kommen die Spaltenmuster bei IC1 an. In Ruhe liegt der Bus auf HIGH, dann sind alle Spalten an.
-- **Low-Side (Zeilen):** IC3 (ULN2804A) wird von den **Tasten-Zeilen** angesteuert (gemessen: IC3.7 ← P04). Zeile HIGH = LED-Zeile aktiv.
+- **High-Side (Spalten):** IC1 (UDN2982A) Pin 1–6 ← B-Seite von IC4 (74HC245). Die A-Seite ist der Bus P46–P51. **P28 = /OE von IC4**; nur bei P28 = LOW kommen die Spaltenmuster bei IC1 an. In Ruhe liegt der Bus auf HIGH, dann sind alle Spalten an.
+- **Low-Side (Zeilen):** IC3 (ULN2804A) wird von den **Tasten-Zeilen** angesteuert (gemessen: IC3.7 ← P06). Zeile HIGH = LED-Zeile aktiv.
 
 | Zeile (HIGH) | LEDs |
 |---|---|
-| P14 | SW1, SW2, SW3 |
-| P12 | SW6–SW11 |
-| P10 | SW12–SW17 |
-| P08 | SW18–SW23 |
-| P06 | SW24–SW29 |
-| P04 | SW30–SW35 |
-| P02 | LED20 rot, LED21 grün, LED22 rot, LED23 rot, LED24 rot (LED27 unbestückt) |
+| P16 | SW1, SW2, SW3 |
+| P14 | SW6–SW11 |
+| P12 | SW12–SW17 |
+| P10 | SW18–SW23 |
+| P08 | SW24–SW29 |
+| P06 | SW30–SW35 |
+| P04 | LED20 rot, LED21 grün, LED22 rot, LED23 rot, LED24 rot (LED27 unbestückt) |
 
-- **Spalten** (`logs/led_finder_2026-10-12_075909.json`): **P46 (A14) = Spalte 1, P47 (A7) = 2, P48 (A15) = 3, P49 (D2) = 4, P50 (D8) = 5, P51 (D3) = 6**. Getestet in Zeile P04: P46 ONAXIS, P47 AUTO SHIM, P48 DIFF. MODE, P49 STD BY, P50 FINE, P51 2nd. Die Reihenfolge ist also dieselbe wie bei den Tasten (SW-Nummer aufsteigend).
-- **Eine LED einschalten:** Zeile HIGH, Spalten-Ader HIGH (alle anderen Spalten LOW), P26 LOW. Multiplexen: immer nur eine Zeile gleichzeitig.
+- **Spalten** (`logs/led_finder_2026-10-12_075909.json`): **P46 (A14) = Spalte 1, P47 (A7) = 2, P48 (A15) = 3, P49 (D2) = 4, P50 (D8) = 5, P51 (D3) = 6**. Getestet in Zeile P06: P46 ONAXIS, P47 AUTO SHIM, P48 DIFF. MODE, P49 STD BY, P50 FINE, P51 2nd. Die Reihenfolge ist also dieselbe wie bei den Tasten (SW-Nummer aufsteigend).
+- **Eine LED einschalten:** Zeile HIGH, Spalten-Ader HIGH (alle anderen Spalten LOW), P28 LOW. Multiplexen: immer nur eine Zeile gleichzeitig.
 - **Bedeutung laut BSMS-Frontfolie (vermutet, 2026-10-15):** LED20 SAMPLE UP, LED21 SAMPLE DOWN, LED22 SAMPLE MISSING, LED23 FUNCTION 2ND, LED24 FUNCTION MENU. Bei der HPCU-Variante heißen sie MAS STATUS AUTO / MAIN ON / SPIN LOCK und FUNCTION 2nd / MENU; LED27 ist dort evtl. bestückt.
-- **Status-LEDs in Zeile P02** (`logs/led_finder_2026-10-12_155548.json`): P46 = LED20 (rot), P47 = LED21 (grün), P48 = LED22 (rot), P49 = LED27 (nicht bestückt; Lötpads zwischen LED22 und LED23, per Multimeter bestätigt), P50 = LED23 (rot), P51 = LED24 (rot). Die Tasten CHAN. SELECT und TRANS. P-DOWN (Direkttasten) haben in Zeile P14 keine sichtbare LED.
-- Bargraph LED25: bei P26 = LOW leuchten 6 von 10 Segmenten, bei zusätzlich P57 = LOW nur noch 2. Noch ungeklärt.
+- **Status-LEDs in Zeile P04** (`logs/led_finder_2026-10-12_155548.json`): P46 = LED20 (rot), P47 = LED21 (grün), P48 = LED22 (rot), P49 = LED27 (nicht bestückt; Lötpads zwischen LED22 und LED23, per Multimeter bestätigt), P50 = LED23 (rot), P51 = LED24 (rot). Die Tasten CHAN. SELECT und TRANS. P-DOWN (Direkttasten) haben in Zeile P16 keine sichtbare LED.
+- Bargraph LED25: bei P28 = LOW leuchten 6 von 10 Segmenten, bei zusätzlich P57 = LOW nur noch 2. Noch ungeklärt.
 
 ## Router-Display: 74HC595-Kette IC10–IC14 (2026-10-12, `logs/pin_tracer_2026-10-12_081150.json`)
 
@@ -258,14 +260,14 @@ Stand 2026-10-14: Es war keine 5-V-Buchse mehr frei, deshalb versorgt der Sketch
 |---|---|---|
 | 11 | SRCLK (Schiebetakt, steigende Flanke) | **P56** (D11) |
 | 12 | RCLK (Übernahme ins Ausgangsregister, steigende Flanke) | **P57** (D6) |
-| 13 | /OE (Ausgänge frei bei LOW) | **P26** (D47), dieselbe Ader wie /OE des 74HC245 (IC4) |
+| 13 | /OE (Ausgänge frei bei LOW) | **P28** (D47), dieselbe Ader wie /OE des 74HC245 (IC4) |
 | 10 | /SRCLR (Löschen bei LOW) | **P55** (D5) |
 | 14 | SER | IC10: **P60 (DLED)**, bis 2026-10-23 übersehen, weil P60 an 5V hing; IC11–IC14: Ruhe LOW, kein Treffer → Kaskade von QH' des Vorgängers |
 
-- **IC10 ist der Anfang der Kette.** Die frühere Messung IC10.12 → P26 war falsch (RCLK ist P57); die Messung IC10.13 → nichts ebenfalls (/OE ist P26).
-- Folge von P26 = gemeinsames /OE: Jede Freigabe der Tasten-LED-Spalten schaltet auch die Router-LEDs frei. Das erklärt den leuchtenden Bargraph LED25 bei P26 = LOW, ebenso die Änderung bei P57 LOW (Übernahme neuer Registerinhalte).
-- ~~Hypothese~~ (widerlegt, SER liegt fest an +5 V): SER von IC10 an B-Seite des 74HC245 (B7 oder B8). Dann ist der Dateneingang nur bei P26 = LOW mit einer Kabelader (A7/A8) verbunden. Test: `pin_tracer.py COM8 +L26 IC4.8 IC4.9 IC10.14`.
-- Ergebnis (`logs/pin_tracer_2026-10-12_081754.json`, P26 LOW gehalten): IC4.8 (A7) und IC4.9 (A8): Ruhe LOW, keine Ader. IC4.11 (B8) → P56, IC4.12 (B7) → P57 (?). IC10.14 (SER): Ruhe LOW, keine Ader (bei P26 HIGH war sie HIGH). Widersprüchlich bzw. unklar, ggf. Zählfehler an IC4. Weiter funktional mit `tools/router_finder.py`.
+- **IC10 ist der Anfang der Kette.** Die frühere Messung IC10.12 → P28 war falsch (RCLK ist P57); die Messung IC10.13 → nichts ebenfalls (/OE ist P28).
+- Folge von P28 = gemeinsames /OE: Jede Freigabe der Tasten-LED-Spalten schaltet auch die Router-LEDs frei. Das erklärt den leuchtenden Bargraph LED25 bei P28 = LOW, ebenso die Änderung bei P57 LOW (Übernahme neuer Registerinhalte).
+- ~~Hypothese~~ (widerlegt, SER liegt fest an +5 V): SER von IC10 an B-Seite des 74HC245 (B7 oder B8). Dann ist der Dateneingang nur bei P28 = LOW mit einer Kabelader (A7/A8) verbunden. Test: `pin_tracer.py COM8 +L26 IC4.8 IC4.9 IC10.14`.
+- Ergebnis (`logs/pin_tracer_2026-10-12_081754.json`, P28 LOW gehalten): IC4.8 (A7) und IC4.9 (A8): Ruhe LOW, keine Ader. IC4.11 (B8) → P56, IC4.12 (B7) → P57 (?). IC10.14 (SER): Ruhe LOW, keine Ader (bei P28 HIGH war sie HIGH). Widersprüchlich bzw. unklar, ggf. Zählfehler an IC4. Weiter funktional mit `tools/router_finder.py`.
 
 ### Reihenfolge in der Kette (bestätigt mit `led_test`, 2026-10-12)
 
@@ -297,9 +299,9 @@ Nach Löschen (P55) und k Takten (P56) mit Übernahme (P57) leuchten die ersten 
 | 40 | LED17 |
 
 - **SER von IC10 = TP3 (+5 V), fest verdrahtet** (Durchgang stromlos, 2026-10-12; die allererste Messung „IC10.14 → 5V“ war also richtig). IC4 Pin 8 und Pin 9 piepsen gegen keinen der Messpunkte JU1/TP3/TP2/JU2.
-- **Bestätigt per Ohm-Messung (M1, 2026-10-23, stromlos):** IC10.14 ↔ P60 **0,4 Ω**, IC10.14 ↔ P11/P13/P15 **2 Ω**, IC10.14 ↔ P24 und ↔ P32: kein Durchgang. P11/P13/P15 sind auf der Platine dasselbe Netz. SER hängt also niederohmig an der +5-V-Fläche (Innenlage), P24/P32 haben mit SER nichts zu tun.
+- **Bestätigt per Ohm-Messung (M1, 2026-10-23, stromlos):** IC10.14 ↔ P60 **0,4 Ω**, IC10.14 ↔ P11/P13/P15 **2 Ω**, IC10.14 ↔ „P24“ (alte Zählung, richtig P26) und ↔ „P32“ (D53, leer): kein Durchgang. P11/P13/P15 sind auf der Platine dasselbe Netz. SER hängt also niederohmig an der +5-V-Fläche (Innenlage), P26 hat mit SER nichts zu tun.
 - Folge: Die Kette lässt sich nur **löschen und mit k Einsen füllen**. Beliebige Muster sind ohne Umbau nicht möglich. LED26 (rot) lässt sich also nur zusammen mit dem vollen LED25 einschalten. Die Bargraphs waren im Original Pegelanzeigen, dafür passt das.
-- Matrix Zeile P14, Spalte 4–6: keine LED (bestätigt).
+- Matrix Zeile P16, Spalte 4–6: keine LED (bestätigt).
 
 **Lage und Frontblenden-Beschriftung der Router-LEDs** (Fotos 2026-10-12; ⊓ = Pulssymbol):
 
