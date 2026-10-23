@@ -271,6 +271,7 @@ Anlass: Der Nutzer und ein Kollege sind sicher, dass im Originalbetrieb einzelne
   - DIS2 (`..._090319.json`): **/CE = P18**, alle anderen Leitungen sind gemeinsam. /CLS liegt auf HIGH, DIS2 ist also der Takt-Master für DIS1. Die freien Adern P24 und P32 haben noch keine Funktion.
 - **Stand 2026-10-13:** Die Displays sind fertig. Der Sketch `keys` steuert jetzt das komplette Board: Tasten, alle LEDs, beide Displays mit Text, Umlauten, Pixel-Emojis, Animation und Helligkeit. Der Nutzer ist begeistert („Hammer“).
 - **Stand 2026-10-14:** Auch der **Encoder läuft** (A = D19, B = D21, Versorgung als Notlösung über D20 mit 4,6 V gemessen; die Richtung ist korrigiert, 1024 Schritte pro Umdrehung bestätigt). Dazu kamen die Uhr (DIFF. MODE), Umlaute und Pixel-Emojis per UDC sowie das Männchen am Drehrad. **Damit funktioniert die gesamte Bedienhardware.**
+- **Stand Sitzungsende 2026-10-23:** Die gesamte Bedienhardware ist frei ansteuerbar, jetzt auch jede Router-LED und jedes Bar-Segment (P60 = DLED an D14). Auf dem Mega: `keys`. Verdrahtung wie in `PINOUT.md` „versorgt“, aber P60 an D14; 12-V-Netzteil (das 9-V-Netzteil ist defekt), P17 an VIN. **Nächster Schritt (ab 2026-10-26 geplant): Hardwareentwurf der Zielplatine** (siehe „Planung Zielhardware“; vorher Strom messen und Rastermaß prüfen).
 - **Offen:**
   1. **USB-HID bzw. MIDI**, das eigentliche Ziel. Optionen A–D siehe „Planung Zielhardware“ unten, der Favorit des Nutzers ist D (RP2350B).
   2. **Strom messen** (Leerlauf, alle LEDs, Displays 100 %, Selbsttest) als Grundlage für die Versorgung.
