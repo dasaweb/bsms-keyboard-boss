@@ -8,9 +8,10 @@ Gedrückte Tasten leuchten auf. Jede Taste, die schon einmal gedrückt wurde,
 bekommt einen grünen Rand ("getestet"). Taste R im Fenster setzt das zurück.
 Der grüne Punkt jeder Taste zeigt den echten Zustand ihrer LED auf dem Board, ebenso
 das Router-Display oben (Bargraphs LED25/26, LED1-19) und die Status-LEDs LED20-24.
-Die Tastenfunktionen stecken im Sketch (ONAXIS/2nd = Kette +1/-1, STD BY = löschen,
-TRANS. P-DOWN / CHAN. SELECT = Animation, HE LEVEL ... LOCK SHIFT = LED20-24).
-Ein Mausklick auf eine Taste wirkt wie ein Tastendruck.
+Die Tastenfunktionen stecken im Sketch (ONAXIS/2nd = Pegel der Bars +1/-1, STD BY = Router aus,
+TRANS. P-DOWN = Lauflicht, CHAN. SELECT = Kanal H/X/Y/Z, HE LEVEL ... LOCK SHIFT = LED20-24).
+Ein Mausklick auf eine Taste wirkt wie ein Tastendruck, ein Klick auf eine Router-LED (LED1-19)
+oder ein Bar-Segment schaltet es um. Rechtsklick auf ein Bar-Segment = Pegel bis hierher.
 Das Display zeigt den echten Text der beiden HDSP-2112 (links DIS2, rechts DIS1); über das
 Eingabefeld rechts lässt sich eigener Text auf die Displays schicken. FINE = Helligkeit.
 Layout nach dem Display-Board (Foto) im Stil von Figure 16 aus z31476.
@@ -74,8 +75,8 @@ LED_COLORS = {"g": (GREEN_OFF, GREEN_ON), "y": (YELLOW_OFF, YELLOW_ON), "r": (RE
 
 # Tasten mit Sonderfunktion im Sketch keys: SW -> (Markierung, Erklärung)
 SPECIAL = {
-    30: ("+1", "ONAXIS: Kette +1 (halten)"), 35: ("−1", "2nd: Kette −1 (halten)"), 33: ("CLR", "STD BY: Kette löschen"),
-    5: ("ANIM", "TRANS. P-DOWN: Animation ganze Kette"), 4: ("BARS", "CHAN. SELECT: Animation Bars"),
+    30: ("+1", "ONAXIS: Pegel +1 (halten)"), 35: ("−1", "2nd: Pegel −1 (halten)"), 33: ("CLR", "STD BY: Router aus"),
+    5: ("ANIM", "TRANS. P-DOWN: Lauflicht"), 4: ("KAN", "CHAN. SELECT: Kanal H/X/Y/Z"),
     12: ("L20", "HE LEVEL: LED20 blinkt"), 13: ("L21", "leere Taste: LED21 blinkt"),
     14: ("L22", "LOCK ON-OFF: LED22 blinkt"), 16: ("L23", "LOCK DC: LED23 blinkt"),
     17: ("L24", "LOCK SHIFT: LED24 blinkt"), 34: ("HELL", "FINE: Display heller (halten)"),
@@ -103,6 +104,8 @@ class KeyboardGUI:
         self.items = {}
         self.leds = set()
         self.chain_items = {}    # Position 1-40 -> (Item, Farbe aus, Farbe an)
+        self.bar_bits = 0        # Bit i = Bar-Segment 1+i (FWD 1-10, REFL 11-20)
+        self.router_bits = 0     # Bit i = Kettenposition 21+i
         self.status_items = {}
         self.status_mode = {}
         self.blink_on = True
@@ -182,6 +185,7 @@ class KeyboardGUI:
             else:
                 pts = [x, y, x + lw, y, x + lw, y + lh, x, y + lh]
             item_of[n] = (c.create_polygon(pts, fill=off, outline="#555"), off, on)
+            c.tag_bind(item_of[n][0], "<Button-1>", lambda e, n=n: self.click_router(n))
             c.create_text(x + lw / 2, y + lh + 9, text=label, font=("Segoe UI", 8, "bold"), fill="#55575a")
             c.create_text(x + lw / 2, y - 6, text=str(n), font=("Segoe UI", 6), fill="#9a9c97")
         bx = WIDTH / 2 - 125
@@ -192,6 +196,8 @@ class KeyboardGUI:
             x = bx + i * 19
             off, on = (GREEN_OFF, GREEN_ON) if k <= 10 else (RED_OFF, RED_ON)
             self.chain_items[k] = (c.create_rectangle(x, base - h, x + 15, base, fill=off, outline=""), off, on)
+            c.tag_bind(self.chain_items[k][0], "<Button-1>", lambda e, k=k: self.click_bar(k))
+            c.tag_bind(self.chain_items[k][0], "<Button-3>", lambda e, k=k: self.send(f"C{k}"))
         c.create_text(bx + 92, 73, text="FWD  (LED25)", font=("Segoe UI", 8, "bold"), fill="#55575a")
         c.create_text(bx + 92, 115, text="REFL  (LED26)", font=("Segoe UI", 8, "bold"), fill="#55575a")
         for k in range(21, 41):
@@ -205,7 +211,8 @@ class KeyboardGUI:
             normal, _, fg = COLORS[color]
             tested = self.rrect(x - 4, y - 4, x + KW + 4, y + KH + 4, 12, fill="", outline="", width=3)
             body = self.rrect(x, y, x + KW, y + KH, 9, fill=normal, outline="#111", width=1)
-            led = c.create_oval(x + KW / 2 - 6, y + 6, x + KW / 2 + 6, y + 18, fill=LED_OFF, outline="#111")
+            led = None if sw == 4 else c.create_oval(x + KW / 2 - 6, y + 6, x + KW / 2 + 6, y + 18,
+                                                     fill=LED_OFF, outline="#111")   # CHAN. SELECT hat keine LED
             text = c.create_text(x + KW / 2, y + 38, text=label, fill=fg,
                                  font=("Segoe UI", 10, "bold"), justify="center")
             c.create_text(x + 5, y + 3, text=f"SW{sw}", anchor="nw",
@@ -219,7 +226,8 @@ class KeyboardGUI:
                 self.rrect(x + KW - bw - 3, y + 3, x + KW - 3, y + 15, 4, fill=BADGE, outline="")
                 c.create_text(x + KW - 3 - bw / 2, y + 9, text=tag, font=("Segoe UI", 7, "bold"), fill="#222")
             for item in (body, led, text):
-                c.tag_bind(item, "<Button-1>", lambda e, n=sw: self.click(n))
+                if item is not None:
+                    c.tag_bind(item, "<Button-1>", lambda e, n=sw: self.click(n))
 
         # Alphanumerisches Display (2 × HDSP-2112)
         dy = ROW_Y[2] + KH + 30
@@ -263,12 +271,27 @@ class KeyboardGUI:
 
     def set_led(self, sw, on):
         (self.leds.add if on else self.leds.discard)(sw)
-        if sw in self.items:
+        if sw in self.items and self.items[sw][2] is not None:
             self.c.itemconfigure(self.items[sw][2], fill=LED_ON if on else LED_OFF)
 
-    def set_chain(self, k):
+    def draw_chain(self):
         for pos, (item, off, on) in self.chain_items.items():
-            self.c.itemconfigure(item, fill=on if pos <= k else off)
+            lit = (self.bar_bits >> (pos - 1) if pos <= 20 else self.router_bits >> (pos - 21)) & 1
+            self.c.itemconfigure(item, fill=on if lit else off)
+
+    def send(self, text):
+        if self.ser is not None:
+            self.ser.write((text + "\n").encode())
+
+    def click_bar(self, k):
+        """Bar-Segment k (1-20) umschalten."""
+        self.send(f"B{k}={0 if self.bar_bits >> (k - 1) & 1 else 1}")
+
+    def click_router(self, n):
+        """Router-LED n umschalten."""
+        if self.ser is not None:
+            on = self.router_bits >> CHAIN_LEDS.index(n) & 1
+            self.ser.write(f"R{n}={0 if on else 1}\n".encode())
 
     def set_encoder(self, n):
         """Griffmulde des Knopfs drehen: 1024 Schritte = eine Umdrehung."""
@@ -360,8 +383,12 @@ class KeyboardGUI:
                 self.c.itemconfigure(self.bright, text=f"Helligkeit {BRIGHT_PCT[b]} %")
             elif data.startswith("E "):
                 self.set_encoder(int(data[2:]))
-            elif data.startswith("C "):
-                self.set_chain(int(data[2:]))
+            elif data.startswith("B "):
+                self.bar_bits = int(data[2:], 16)
+                self.draw_chain()
+            elif data.startswith("R "):
+                self.router_bits = int(data[2:], 16)
+                self.draw_chain()
             elif data.startswith("S "):
                 col, mode = data[2:].split()
                 self.set_status(int(col), int(mode))

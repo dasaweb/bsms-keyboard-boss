@@ -36,7 +36,8 @@ Bisher gefundene Rails (Messungen 2026-10-09, Durchgang):
 - **TP2** (Messpunkt vorne, unten links) = P17, P19, P21, P23, untereinander verbunden.
 - **TP1** (Messpunkt vorne, links bei R1–R11) = nur P52, also eine einzelne Signalleitung.
 - Muster: Die Rails liegen alle in der Reihe der ungeraden Adern (JU1 P01–09, TP3 P11–15, TP2 P17–23). Die Logik-Versorgung ist P60, siehe unten.
-- **P60 = VCC der 74HC595 (IC10 Pin 16) → +5 V Logik (bestätigt).** Das ist eine einzelne Ader. Für den Scan bleibt sie an D14, für den versorgten Betrieb kommt sie an 5V.
+- **P60 = DLED = SER von IC10 (Messung M3, 2026-10-23):** IC10.14 ↔ P60 ≈ 0 Ω, IC10.16 ↔ P60 offen, IC10.16 ↔ TP3 ≈ 0 Ω. Die 595 hängen also an TP3. Die frühere Angabe „P60 = VCC der 74HC595 (IC10 Pin 16)“ war ein Messfehler (Piepser, 2026-10-09). Nicht HIGH treiben, solange das Board unversorgt ist.
+- ~~P60 = VCC der 74HC595 (IC10 Pin 16) → +5 V Logik~~ (falsch). Das ist eine einzelne Ader. Für den Scan bleibt sie an D14, für den versorgten Betrieb kommt sie an 5V.
 - TP2 und TP3 sind damit nicht die Logik-Versorgung.
 - Messung 2026-10-09 (Durchgang):
   - **TP2 piept an IC5 Pin 9 und IC1 Pin 9** (UDN2982A VS) → **TP2 = LED-Versorgung VS (bestätigt)**. Im Original vermutlich 12 V.
@@ -56,7 +57,7 @@ Bisher gefundene Rails (Messungen 2026-10-09, Durchgang):
 |---|---|
 | P01 (JU1, GND Logik) | GND |
 | P61 (JU2, GND ULN2804A) | GND |
-| P60 (+5 V, 74HC595) | 5V |
+| P60 (DLED, SER von IC10) | **D14** (bis 2026-10-23 irrtümlich 5V) |
 | P11 (TP3, +5 V IC2/IC4/Displays) | 5V |
 | P17 (TP2, LED-Versorgung VS) | bleibt an D38, der Pin wird von keinem Sketch benutzt (hochohmig) |
 | alle anderen | wie in der Blocktabelle oben |
@@ -173,7 +174,7 @@ Direkt verdrahtet, aktiv LOW: **P59 (D7) = SW4 CHAN. SELECT**, **P58 (D12) = SW5
 | P57 | D6 | | | | |
 | P58 | D12 | | | Taste TRANS. P-DOWN (SW5) nach GND | **Taste TRANS. P-DOWN, aktiv LOW (bestätigt)** |
 | P59 | D7 | | | Taste CHAN. SELECT (SW4) nach GND | **Taste CHAN. SELECT, aktiv LOW (bestätigt)** |
-| P60 | D14 (Scan) → später **5V** | | | IC10.16 (74HC595 VCC) | **+5 V Logik (bestätigt)** |
+| P60 | **D14** | | | IC10.14 (SER) | **DLED, Daten der 595-Kette (bestätigt 2026-10-23)** |
 | P61 | D15 | | | JU2 = IC3.9 (ULN2804A GND) | **Leistungs-GND der LED-Senken** (vermutet) |
 | P62 | – (frei) | | | JU2 = IC3.9 (ULN2804A GND) | **Leistungs-GND der LED-Senken** (vermutet) |
 | P63 | – (frei) | | | JU2 = IC3.9 (ULN2804A GND) | **Leistungs-GND der LED-Senken** (vermutet) |
@@ -259,7 +260,7 @@ Stand 2026-10-14: Es war keine 5-V-Buchse mehr frei, deshalb versorgt der Sketch
 | 12 | RCLK (Übernahme ins Ausgangsregister, steigende Flanke) | **P57** (D6) |
 | 13 | /OE (Ausgänge frei bei LOW) | **P26** (D47), dieselbe Ader wie /OE des 74HC245 (IC4) |
 | 10 | /SRCLR (Löschen bei LOW) | **P55** (D5) |
-| 14 | SER | IC10: keine Kabelader (Ruhe HIGH); IC11–IC14: Ruhe LOW, kein Treffer → Kaskade von QH' des Vorgängers |
+| 14 | SER | IC10: **P60 (DLED)**, bis 2026-10-23 übersehen, weil P60 an 5V hing; IC11–IC14: Ruhe LOW, kein Treffer → Kaskade von QH' des Vorgängers |
 
 - **IC10 ist der Anfang der Kette.** Die frühere Messung IC10.12 → P26 war falsch (RCLK ist P57); die Messung IC10.13 → nichts ebenfalls (/OE ist P26).
 - Folge von P26 = gemeinsames /OE: Jede Freigabe der Tasten-LED-Spalten schaltet auch die Router-LEDs frei. Das erklärt den leuchtenden Bargraph LED25 bei P26 = LOW, ebenso die Änderung bei P57 LOW (Übernahme neuer Registerinhalte).
@@ -296,6 +297,7 @@ Nach Löschen (P55) und k Takten (P56) mit Übernahme (P57) leuchten die ersten 
 | 40 | LED17 |
 
 - **SER von IC10 = TP3 (+5 V), fest verdrahtet** (Durchgang stromlos, 2026-10-12; die allererste Messung „IC10.14 → 5V“ war also richtig). IC4 Pin 8 und Pin 9 piepsen gegen keinen der Messpunkte JU1/TP3/TP2/JU2.
+- **Bestätigt per Ohm-Messung (M1, 2026-10-23, stromlos):** IC10.14 ↔ P60 **0,4 Ω**, IC10.14 ↔ P11/P13/P15 **2 Ω**, IC10.14 ↔ P24 und ↔ P32: kein Durchgang. P11/P13/P15 sind auf der Platine dasselbe Netz. SER hängt also niederohmig an der +5-V-Fläche (Innenlage), P24/P32 haben mit SER nichts zu tun.
 - Folge: Die Kette lässt sich nur **löschen und mit k Einsen füllen**. Beliebige Muster sind ohne Umbau nicht möglich. LED26 (rot) lässt sich also nur zusammen mit dem vollen LED25 einschalten. Die Bargraphs waren im Original Pegelanzeigen, dafür passt das.
 - Matrix Zeile P14, Spalte 4–6: keine LED (bestätigt).
 

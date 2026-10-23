@@ -17,13 +17,13 @@ Die **gesamte Bedienhardware läuft** am Arduino Mega mit der Demo-Firmware `ard
 |---|---|
 | 35 Tasten (6×6-Matrix + 2 Direkttasten) | ✅ |
 | Tasten-LEDs und Status-LEDs LED20–24 (gemultiplexte LED-Matrix) | ✅ |
-| Router-Display LED1–19 und Bargraphs FWD/REFL (Kette aus 5 × 74HC595) | ✅ nur „die ersten k“, siehe unten |
+| Router-Display LED1–19 und Bargraphs FWD/REFL (Kette aus 5 × 74HC595) | ✅ alle 40 Positionen einzeln |
 | 2 × HDSP-2112 (16 Zeichen): Text, Umlaute, Pixel-Emojis, Animation, Helligkeit, Uhr | ✅ |
 | Optischer Drehregler S1-256-BM6 (1024 Schritte/Umdrehung) | ✅ |
 | USB-HID / MIDI | ⏳ geplant |
 | Eigene Platine | ⏳ geplant |
 
-Dazu gibt es eine grafische Oberfläche (`tools/keyboard_gui.py`). Sie spiegelt Tasten, LEDs, Displays und den Drehregler in Echtzeit. Ein Mausklick wirkt wie ein Tastendruck, und über ein Eingabefeld lässt sich Text auf die Displays schicken.
+Dazu gibt es eine grafische Oberfläche (`tools/keyboard_gui.py`). Sie spiegelt Tasten, LEDs, Displays und den Drehregler in Echtzeit. Ein Mausklick wirkt wie ein Tastendruck, ein Klick auf eine Router-LED schaltet sie um, und über ein Eingabefeld lässt sich Text auf die Displays schicken.
 
 <p align="center">
   <img src="Fotos_web/IMG20261009131931.jpg" height="300" alt="Keyboard-Display-Board von vorn">
@@ -36,15 +36,16 @@ Dazu gibt es eine grafische Oberfläche (`tools/keyboard_gui.py`). Sie spiegelt 
 
 | Taste | Funktion |
 |---|---|
-| ONAXIS / 2nd | Kette +1 / −1 (gehalten mit Wiederholung) |
-| STD BY | Kette löschen |
-| TRANS. P-DOWN / CHAN. SELECT | Animation über die ganze Kette / über die Bars |
+| ONAXIS / 2nd | Pegel der Bars +1 / −1 (gehalten mit Wiederholung) |
+| STD BY | Pegel 0, alle Router-LEDs aus |
+| TRANS. P-DOWN | Lauflicht über LED1–19, die Bars laufen mit |
+| CHAN. SELECT | Kanal H → X → Y → Z → aus (Pfeil-LEDs) |
 | HE LEVEL, (leer), LOCK ON-OFF, LOCK DC, LOCK SHIFT | LED20–24 blinkend an/aus |
 | SWEEP | Display-Animation: Strichmännchen + Laufschrift. Mit dem Drehrad läuft das Männchen vor und zurück |
 | SWEEP AMPL. | Spalt zwischen den Zeichen für das Männchen (0–5 Pixel) |
 | DIFF. MODE | Uhr `09:15:42  13.10.` (Zeit kommt vom PC) |
 | FINE | Display-Helligkeit 13 → … → 100 % |
-| Drehrad | Kette einstellen |
+| Drehrad | Pegel der Bars einstellen (0–20) |
 | alle anderen | eigene LED an/aus, das Display zeigt den Tastennamen |
 
 ## Varianten
@@ -94,8 +95,7 @@ Die 64 Adern des Flachbandkabels heißen hier **P01–P64**. In Klammern steht d
 |---|---|---|
 | P01, P03, P05, P07, P09 (JU1) | GND Logik | GND (nur P01 anklemmen) |
 | P61–P64 (JU2) | GND der LED-Senken (ULN2804A) | GND (nur P61) |
-| P60 | +5 V Logik (74HC595) | 5V |
-| P11, P13, P15 (TP3) | +5 V für 74HC05, 74HC245, Displays | 5V (nur P11) |
+| P11, P13, P15 (TP3) | +5 V für 74HC05, 74HC245, 74HC595, Displays | 5V (nur P11) |
 | P17, P19, P21, P23 (TP2) | **LED-Versorgung VS**, original ca. 12 V; 5 V reichen **nicht** | VIN bei 9-V-Netzteil (nur P17) |
 | P52 (TP1) | ca. 0,7 kΩ nach GND | – |
 
@@ -130,9 +130,9 @@ Direkttasten, aktiv LOW: **P59 (D7) = SW4 CHAN. SELECT**, **P58 (D12) = SW5 TRAN
 | 12 RCLK | Übernahme | P57 (D6) |
 | 13 /OE | Ausgänge frei bei LOW | P26 (D47), **gemeinsam mit /OE des 74HC245** |
 | 10 /SRCLR | Löschen | P55 (D5) |
-| 14 SER (IC10) | Dateneingang | **fest auf +5 V (TP3)** |
+| 14 SER (IC10) | Dateneingang DLED | **P60 (D14)** |
 
-Weil SER fest auf HIGH liegt, kann man die Kette nur **löschen und mit k Einsen füllen**. Es leuchten also immer „die ersten k“ Positionen:
+P60 haben wir lange für die 5-V-Versorgung der 595 gehalten (ein Piepser-Messfehler). Solange P60 an 5 V hing, ließ sich die Kette nur mit Einsen füllen. Seit dem 23.10.2026 hängt P60 an einem Datenpin, und alle 40 Positionen sind einzeln schaltbar. Das zuerst geschobene Bit landet auf Position 40:
 
 | Position | LED |
 |---|---|

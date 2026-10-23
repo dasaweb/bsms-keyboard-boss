@@ -12,13 +12,16 @@
 //   4 LED27 unbestueckt, 5 LED23, 6 LED24).
 //   LED-Spalten = Bus P46-P51 (HIGH = an), ueber 74HC245 (IC4) auf UDN2982A (IC1);
 //   P26 = /OE des 245 UND der 595-Kette. Multiplex: eine Zeile zur Zeit.
-//   595-Kette: P55 = /SRCLR, P56 = SRCLK, P57 = RCLK, SER fest auf +5 V. Es lassen sich nur
-//   "die ersten k Positionen" einschalten: 1-10 LED25 gruen, 11-20 LED26 rot, 21-40 Einzel-LEDs.
+//   595-Kette: P60 = DLED (SER von IC10, an D14), P56 = SRCLK, P57 = RCLK, P55 = /SRCLR (bleibt HIGH).
+//   40 Positionen, frei schaltbar (seit 2026-10-23, vorher hing P60 irrtuemlich an 5 V):
+//   1-10 Bargraph LED25 gruen (FWD), 11-20 LED26 rot (REFL), 21-40 LED1-19 und die LED in TRANS. P-DOWN
+//   (Reihenfolge siehe CHAIN_LED). Die Bars zeigen einen Pegel 0-20 (erst FWD, dann REFL).
 //
 // Tastenfunktionen (Demo):
-//   ONAXIS (SW30) Kette +1, 2nd (SW35) Kette -1 (gehalten: Wiederholung nach 500 ms, dann alle 80 ms),
-//   STD BY (SW33) Kette loeschen,
-//   TRANS. P-DOWN (SW5) Animation ueber die ganze Kette, CHAN. SELECT (SW4) Animation ueber die Bars.
+//   ONAXIS (SW30) Pegel +1, 2nd (SW35) Pegel -1 (gehalten: Wiederholung nach 500 ms, dann alle 80 ms),
+//   STD BY (SW33) Pegel 0 und alle Router-LEDs aus,
+//   TRANS. P-DOWN (SW5) Lauflicht LED1-19 mit Bars (ihre LED leuchtet dabei),
+//   CHAN. SELECT (SW4) Kanal weiterschalten: H, X, Y, Z, aus (Pfeil-LEDs LED6, LED5, LED14, LED15).
 //   ONAXIS, 2nd und STD BY leuchten, solange sie gedrueckt sind.
 //   HE LEVEL (SW12), leere Taste (SW13), LOCK ON-OFF (SW14), LOCK DC (SW16), LOCK SHIFT (SW17)
 //   schalten LED20, LED21, LED22, LED23, LED24 blinkend an bzw. aus; ihre eigene LED leuchtet dazu.
@@ -32,21 +35,25 @@
 //   Alle anderen Tasten schalten ihre eigene LED um.
 // Drehregler (optischer Encoder S1-256-BM6, 256 Striche, 4 Flanken = 1024 Schritte/Umdrehung):
 //   Ch A = D19, Ch B = D21 (beide Interrupt), +5 V NOTLOESUNG ueber D20 (HIGH; keine 5-V-Buchse frei).
-//   Drehen stellt die Kette ein (ENC_DIV Schritte je Stufe, ca. 1 Umdrehung = ganze Kette).
+//   Drehen stellt den Pegel der Bars ein (ENC_DIV Schritte je Stufe).
 //   Bei laufender SWEEP-Animation steuert das Rad stattdessen das Maennchen (ENC_MAN_DIV Schritte je Pixel,
 //   rueckwaerts dreht es sich um; am Rand erscheint es auf der anderen Seite). SWEEP aus/an = wieder Automatik.
 // Displays (2 x HDSP-2112, ermittelt 2026-10-13, siehe PINOUT.md): 16 Zeichen, links DIS2, rechts DIS1.
-//   Zeigen beim Druecken den Tastennamen (mit AN/AUS), bei ONAXIS/2nd/STD BY den Kettenstand.
+//   Zeigen beim Druecken den Tastennamen (mit AN/AUS), bei ONAXIS/2nd/Drehregler den Pegel.
 //
 // Ausgabe (115200 Baud): "D SWn" / "U SWn" beim Druecken/Loslassen, "L SWn 0|1" bei Tasten-LEDs,
-//   "S <c> 0|1|2" bei Status-LEDs (Spalte c; 2 = blinkt), "C <k>" bei Aenderung der Kette,
+//   "S <c> 0|1|2" bei Status-LEDs (Spalte c; 2 = blinkt), "B <hex>" bei Aenderung der Bar-Segmente
+//   (Bit i = Kettenposition 1+i, also FWD 1-10 und REFL 11-20),
+//   "R <hex>" bei Aenderung der Router-LEDs (Bit i = Kettenposition 21+i),
 //   "E <zaehler>" bei Drehung (hoechstens alle 50 ms), "W <16 Zeichen>" bei jeder Aenderung des Display-Texts (Strichmaennchen als Zeichen 0x7F), "H <0-6>" bei Aenderung der Helligkeit.
 // Befehle (mit Zeilenende):
 //   Q          gedrueckte Tasten als "Q SWa SWb ..." ausgeben
 //   K<n>       Tastendruck von SWn nachahmen (gleiche Wirkung wie die echte Taste)
 //   L<n>=<0|1> LED der Taste SWn setzen
 //   S<c>=<0|1|2> Status-LED in Spalte c setzen (0 aus, 1 an, 2 blinkt)
-//   C<k>       Kette auf k (0-40) setzen
+//   C<k>       Pegel der Bars auf k (0-20) setzen (die ersten k Segmente an, der Rest aus)
+//   B<i>=<0|1> einzelnes Bar-Segment i setzen (1-10 FWD, 11-20 REFL)
+//   R<n>=<0|1> Router-LED n setzen (1-19 = LED1-19, 0 = LED in TRANS. P-DOWN)
 //   T<0|1>     Tastenfunktionen aus/an (Vorgabe an)
 //   A<0|1>     alle LEDs aus/an
 //   W<text>    Text auf die Displays (bis 16 Zeichen, links beginnend, UTF-8). Umlaute, ss und einige Emojis
@@ -59,10 +66,15 @@ const uint8_t COLS[6] = {A6, A13, A5, A12, A4, A11};       // P45 P44 P43 P42 P4
 const uint8_t BUS[6]  = {A14, A7, A15, 2, 8, 3};           // P46 P47 P48 P49 P50 P51
 const uint8_t PIN_OE = 47;                                  // P26, /OE von 74HC245 und 595
 const uint8_t PIN_CLR = 5, PIN_SRCLK = 11, PIN_RCLK = 6;    // P55, P56, P57
+const uint8_t PIN_DLED = 14;                                // P60, SER von IC10
 const uint8_t PIN_CHAN_SELECT = 7;                          // P59
 const uint8_t PIN_TRANS_PDOWN = 12;                         // P58
 const uint16_t HOLD_US = 1500;                              // Leuchtdauer je Zeile
-const uint8_t CHAIN_LEN = 40;
+const uint8_t CHAIN_LEN = 40, BAR_LEN = 20, ROUTER_LEN = 20;
+// Kettenposition 21-40 -> LED-Nummer (0 = LED in Taste TRANS. P-DOWN), bestaetigt 2026-10-23
+const uint8_t CHAIN_LED[ROUTER_LEN] = {5, 6, 14, 15, 1, 7, 4, 10, 13, 18, 0, 19, 2, 8, 11, 16, 3, 9, 12, 17};
+const uint8_t CHANNEL_LED[4] = {6, 5, 14, 15};               // Pfeile H, X, Y, Z
+const char CHANNEL_NAME[4] = {'H', 'X', 'Y', 'Z'};
 const uint16_t BLINK_MS = 400;                              // halbe Blinkperiode der Status-LEDs
 const uint16_t REPEAT_DELAY_MS = 500, REPEAT_MS = 80;     // Tastenwiederholung ONAXIS/2nd
 const uint16_t REPEAT_FINE_MS = 400;
@@ -106,10 +118,14 @@ uint8_t statusBlink;               // Bit c = Status-LED in Spalte c blinkt (wen
 bool demo = true;
 String cmd;
 
-uint8_t chainLevel = 0;            // eingestellter Fuellstand
-uint8_t shownLevel = 0;            // aktuell angezeigter Fuellstand (auch waehrend Animation)
-uint8_t animTop = 0;               // 0 = keine Animation, sonst Umkehrpunkt (20 oder 40)
-int8_t animDir = 0;
+uint8_t barLevel = 0;              // eingestellter Pegel der Bars (0-20)
+uint32_t barBits = 0;              // Bit i = Bar-Segment 1+i (normal die ersten barLevel Bits)
+uint32_t routerBits = 0;           // Bit i = Kettenposition 21+i
+uint32_t shownBar = 0xFFFFFFFF;    // aktuell angezeigt (auch waehrend der Animation)
+uint32_t shownBits = 0xFFFFFFFF;
+bool animOn = false;               // Lauflicht von TRANS. P-DOWN
+int8_t animStep = 0, animDir = 0;  // animStep = LED-Nummer 0-19 (0 = vor LED1)
+uint8_t channel = 0;               // 0 = aus, 1-4 = H, X, Y, Z
 unsigned long animNext = 0;
 uint8_t repeatKey = 0;             // gehaltene Taste mit Wiederholung (ONAXIS/2nd), 0 = keine
 unsigned long repeatNext = 0;
@@ -223,37 +239,82 @@ void pulse(uint8_t pin) {
   delayMicroseconds(2);
 }
 
-void showChain(uint8_t k) {
-  if (k > CHAIN_LEN) k = CHAIN_LEN;
-  pulse(PIN_CLR);
-  for (uint8_t i = 0; i < k; i++) pulse(PIN_SRCLK);
+int8_t routerBit(uint8_t led) {
+  for (uint8_t i = 0; i < ROUTER_LEN; i++) if (CHAIN_LED[i] == led) return i;
+  return -1;
+}
+
+// 40 Bits schieben (das zuerst geschobene landet auf Position 40) und uebernehmen
+void showChain(uint32_t bar, uint32_t bits) {
+  for (uint8_t pos = CHAIN_LEN; pos >= 1; pos--) {
+    bool on = pos <= BAR_LEN ? bar >> (pos - 1) & 1 : bits >> (pos - BAR_LEN - 1) & 1;
+    digitalWrite(PIN_DLED, on);
+    pulse(PIN_SRCLK);
+  }
+  digitalWrite(PIN_DLED, LOW);
   pulse(PIN_RCLK);
-  if (k != shownLevel) {
-    shownLevel = k;
-    Serial.print(F("C ")); Serial.println(k);
+  if (bar != shownBar) {
+    shownBar = bar;
+    Serial.print(F("B ")); Serial.println(bar, HEX);
+  }
+  if (bits != shownBits) {
+    shownBits = bits;
+    Serial.print(F("R ")); Serial.println(bits, HEX);
   }
 }
 
-void setChain(int k) {
-  animTop = 0;
-  chainLevel = constrain(k, 0, CHAIN_LEN);
-  showChain(chainLevel);
+void updateChain() {
+  if (!animOn) { showChain(barBits, routerBits); return; }
+  uint32_t bits = 1UL << routerBit(0);                 // LED in TRANS. P-DOWN leuchtet mit
+  if (animStep > 0) bits |= 1UL << routerBit(animStep);
+  showChain((1UL << (animStep * BAR_LEN + 10) / 19) - 1, bits);
 }
 
-void startAnim(uint8_t top) {
-  animTop = top;
+void setLevel(int k) {
+  animOn = false;
+  barLevel = constrain(k, 0, BAR_LEN);
+  barBits = (1UL << barLevel) - 1;
+  updateChain();
+}
+
+void setBar(uint8_t seg, bool on) {
+  if (seg < 1 || seg > BAR_LEN) return;
+  animOn = false;
+  if (on) barBits |= 1UL << (seg - 1); else barBits &= ~(1UL << (seg - 1));
+  updateChain();
+}
+
+void setRouter(uint8_t led, bool on) {
+  int8_t i = routerBit(led);
+  if (i < 0) return;
+  if (on) routerBits |= 1UL << i; else routerBits &= ~(1UL << i);
+  updateChain();
+}
+
+void nextChannel() {
+  channel = (channel + 1) % 5;
+  for (uint8_t i = 0; i < 4; i++) setRouter(CHANNEL_LED[i], channel == i + 1);
+  char t[17];
+  if (channel) snprintf(t, sizeof(t), "KANAL %c", CHANNEL_NAME[channel - 1]);
+  else strcpy(t, "KANAL AUS");
+  showText(t);
+}
+
+void startAnim() {
+  animOn = true;
+  animStep = 0;
   animDir = 1;
-  showChain(0);
+  updateChain();
   animNext = millis();
 }
 
 void runAnim() {
-  if (!animTop || millis() < animNext) return;
-  animNext = millis() + (animTop > 20 ? 35 : 45);
-  int k = shownLevel + animDir;
-  if (k >= animTop) { k = animTop; animDir = -1; }
-  if (k <= 0 && animDir < 0) { animTop = 0; showChain(chainLevel); return; }
-  showChain(k);
+  if (!animOn || millis() < animNext) return;
+  animNext = millis() + 60;
+  animStep += animDir;
+  if (animStep >= 19) { animStep = 19; animDir = -1; }
+  if (animStep <= 0 && animDir < 0) { animOn = false; }
+  updateChain();
 }
 
 void dispWrite(uint8_t d, uint8_t addr, uint8_t data) {
@@ -467,7 +528,7 @@ void runEncoder() {
     if (demo) {
       stopSweep();
       stopClock();
-      setChain(chainLevel + steps);
+      setLevel(barLevel + steps);
       showChainText();
     }
   }
@@ -489,7 +550,7 @@ void showKey(uint8_t sw, const char *extra) {
 
 void showChainText() {
   char t[17];
-  snprintf(t, sizeof(t), "KETTE   %2u / %2u", chainLevel, CHAIN_LEN);
+  snprintf(t, sizeof(t), "PEGEL   %2u / %2u", barLevel, BAR_LEN);
   showText(t);
 }
 
@@ -526,11 +587,17 @@ void onPress(uint8_t sw) {
   }
   stopSweep();
   switch (sw) {
-    case SW_ONAXIS:      setChain(chainLevel + 1); setLed(sw, true); showChainText(); return;
-    case SW_2ND:         setChain(chainLevel - 1); setLed(sw, true); showChainText(); return;
-    case SW_STDBY:       setChain(0);              setLed(sw, true); showChainText(); return;
-    case SW_TRANS_PDOWN: startAnim(CHAIN_LEN);     showKey(sw, "");                   return;
-    case SW_CHAN_SELECT: startAnim(20);            showKey(sw, "");                   return;
+    case SW_ONAXIS:      setLevel(barLevel + 1); setLed(sw, true); showChainText(); return;
+    case SW_2ND:         setLevel(barLevel - 1); setLed(sw, true); showChainText(); return;
+    case SW_STDBY:
+      routerBits = 0;
+      channel = 0;
+      setLevel(0);
+      setLed(sw, true);
+      showText("ROUTER AUS");
+      return;
+    case SW_TRANS_PDOWN: startAnim();            showKey(sw, "");                   return;
+    case SW_CHAN_SELECT: nextChannel();                                             return;
     case SW_FINE:        stepBrightness();                                    return;
   }
   for (uint8_t i = 0; i < 5; i++)
@@ -553,7 +620,7 @@ void runRepeat() {
     return;
   }
   repeatNext = millis() + REPEAT_MS;
-  setChain(chainLevel + (repeatKey == SW_ONAXIS ? 1 : -1));
+  setLevel(barLevel + (repeatKey == SW_ONAXIS ? 1 : -1));
   showChainText();
 }
 
@@ -608,11 +675,14 @@ void handleCommand() {
     onPress(sw);
     onRelease(sw);
   } else if (cmd.length() >= 2 && cmd[0] == 'C') {
-    setChain(cmd.substring(1).toInt());
-  } else if (cmd.length() >= 3 && (cmd[0] == 'L' || cmd[0] == 'S') && eq > 1) {
+    setLevel(cmd.substring(1).toInt());
+  } else if (cmd.length() >= 3 && (cmd[0] == 'L' || cmd[0] == 'S' || cmd[0] == 'R' || cmd[0] == 'B') && eq > 1) {
     int n = cmd.substring(1, eq).toInt();
     char v = cmd[cmd.length() - 1];
-    if (cmd[0] == 'L') setLed(n, v == '1'); else setStatus(n, v - '0');
+    if (cmd[0] == 'L') setLed(n, v == '1');
+    else if (cmd[0] == 'R') setRouter(n, v == '1');
+    else if (cmd[0] == 'B') setBar(n, v == '1');
+    else setStatus(n, v - '0');
   } else if (cmd.length() == 2 && cmd[0] == 'T') {
     demo = cmd[1] == '1';
   } else if (cmd.length() >= 2 && cmd[0] == 'Z') {
@@ -626,7 +696,8 @@ void handleCommand() {
     bool on = cmd[1] == '1';
     for (uint8_t sw = 1; sw < NKEYS; sw++) setLed(sw, on);
     for (uint8_t c = 1; c <= 6; c++) setStatus(c, on && c != 4 ? 1 : 0);
-    setChain(on ? CHAIN_LEN : 0);
+    routerBits = on ? (1UL << ROUTER_LEN) - 1 : 0;
+    setLevel(on ? BAR_LEN : 0);
   }
   cmd = "";
 }
@@ -634,6 +705,8 @@ void handleCommand() {
 void setup() {
   const uint8_t ctrl[4] = {PIN_OE, PIN_CLR, PIN_SRCLK, PIN_RCLK};
   for (uint8_t i = 0; i < 4; i++) { digitalWrite(ctrl[i], HIGH); pinMode(ctrl[i], OUTPUT); }
+  digitalWrite(PIN_DLED, LOW);
+  pinMode(PIN_DLED, OUTPUT);
   for (uint8_t c = 0; c < 6; c++) { digitalWrite(BUS[c], LOW); pinMode(BUS[c], OUTPUT); }
   for (uint8_t r = 0; r < 7; r++) pinMode(ROWS[r], INPUT);
   for (uint8_t c = 0; c < 6; c++) pinMode(COLS[c], INPUT_PULLUP);
@@ -642,8 +715,7 @@ void setup() {
   Serial.begin(115200);
   while (!Serial) {}
   Serial.println(F("KEYS READY"));
-  shownLevel = 1;              // erzwingt die Meldung "C 0"
-  showChain(0);
+  updateChain();
   initDisplays();
   digitalWrite(PIN_ENC_VCC, HIGH);       // Encoder-Versorgung (Notloesung)
   pinMode(PIN_ENC_VCC, OUTPUT);
