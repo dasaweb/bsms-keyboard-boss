@@ -23,7 +23,7 @@ Die **gesamte Bedienhardware läuft** am Arduino Mega mit der Demo-Firmware `ard
 | USB-HID / MIDI | ⏳ geplant |
 | Eigene Platine | ⏳ geplant |
 
-Dazu gibt es eine grafische Oberfläche (`tools/keyboard_gui.py`). Sie spiegelt Tasten, LEDs, Displays und den Drehregler in Echtzeit. Ein Mausklick wirkt wie ein Tastendruck, ein Klick auf eine Router-LED schaltet sie um, und über ein Eingabefeld lässt sich Text auf die Displays schicken.
+Dazu gibt es eine grafische Oberfläche (`tools/keyboard_gui.py`). Sie spiegelt Tasten, LEDs, Displays und den Drehregler in Echtzeit. Ein Mausklick wirkt wie ein Tastendruck, ein Klick auf eine Router-LED oder ein Bar-Segment schaltet es um, und über ein Eingabefeld lässt sich Text auf die Displays schicken.
 
 <p align="center">
   <img src="Fotos_web/IMG20261009131931.jpg" height="300" alt="Keyboard-Display-Board von vorn">
@@ -87,7 +87,7 @@ Schaltpläne der Tastatur oder andere Umbauprojekte haben wir im Netz nicht gefu
 
 ## Pinbelegung
 
-Die 64 Adern des Flachbandkabels heißen hier **P01–P64**. In Klammern steht der Pin am Arduino Mega in der aktuellen Testverdrahtung. Die vollständige Messtabelle mit allen Messwegen steht in [`PINOUT.md`](PINOUT.md).
+Die 64 Adern des Flachbandkabels heißen hier **P01–P64**. In Klammern steht der Pin am Arduino Mega in der aktuellen Testverdrahtung. Die vollständige Messtabelle mit allen Messwegen steht in [`PINOUT.md`](PINOUT.md). Achtung: Bis zum 23.10.2026 waren die geraden Adern P02–P32 um zwei Nummern zu niedrig gezählt (die Kabel steckten am Mega um einen Pin versetzt). Die Tabellen hier sind korrigiert, ältere Logs nutzen noch die alte Zählung.
 
 ### Versorgung
 
@@ -96,8 +96,22 @@ Die 64 Adern des Flachbandkabels heißen hier **P01–P64**. In Klammern steht d
 | P01, P03, P05, P07, P09 (JU1) | GND Logik | GND (nur P01 anklemmen) |
 | P61–P64 (JU2) | GND der LED-Senken (ULN2804A) | GND (nur P61) |
 | P11, P13, P15 (TP3) | +5 V für 74HC05, 74HC245, 74HC595, Displays | 5V (nur P11) |
-| P17, P19, P21, P23 (TP2) | **LED-Versorgung VS**, original ca. 12 V; 5 V reichen **nicht** | VIN bei 9-V-Netzteil (nur P17) |
+| P17, P19, P21, P23 (TP2) | **LED-Versorgung VS**, original ca. 12 V; 5 V reichen **nicht** | VIN bei 9–12-V-Netzteil (nur P17) |
 | P52 (TP1) | ca. 0,7 kΩ nach GND | – |
+
+Gemessene Stromaufnahme (12-V-Netzteil, VS ≈ 11,3 V):
+
+| Versorgung | Zustand | Strom |
+|---|---|---|
+| VS (P17) | alle LEDs aus | ≈ 0 A |
+| VS (P17) | alle 40 Router-/Bar-LEDs | 0,36 A |
+| VS (P17) | alle Tasten-LEDs + LED20–24 (gemultiplext) | 0,14 A |
+| VS (P17) | alle LEDs | **0,47 A** |
+| 5 V (P11) | Displays leer | 0,14 A |
+| 5 V (P11) | Displays voll (16 × „#“), 100 % | **0,34 A** |
+| 5 V (P11) | Displays voll, 40 % | 0,15 A |
+
+Die LEDs belasten die 5 V praktisch nicht. Die Displays brauchen bei 40 % Helligkeit kaum mehr als im Leerlauf.
 
 ### Tastenmatrix
 
@@ -185,8 +199,8 @@ Ziel ist ein kompaktes Gerät, das ins vorhandene Gehäuse passt. Es soll sich a
 
 **Favorit: Raspberry Pi Pico 2 W auf einer eigenen Platine**
 
-- Ein Anschluss mit **46 Leitungen** würde die 26 GPIO des Pico sprengen. Mit zwei Kniffen reichen **22 GPIO**:
-  - /RD und /FL der Displays fest auf HIGH, /RST per RC-Glied.
+- Ein Anschluss mit **47 Leitungen** würde die 26 GPIO des Pico sprengen. Mit zwei Kniffen reichen **22 GPIO**:
+  - /RD und /FL der Displays sowie /SRCLR der Kette fest auf HIGH, /RST per RC-Glied.
   - **3 × 74HCT595** auf der Platine dienen gleichzeitig als Pegelwandler (3,3 V → 5 V) und als Port-Erweiterung. Sie übernehmen Zeilen, LED-Bus, Kettensignale sowie Display-Adressen und /CE.
 - Direkt am Pico bleiben Display-Daten + /WR (TTL-Eingänge, 3,3 V reichen), Tasten-Spalten, Direkttasten und der Encoder.
 - **Es muss der RP2350 sein** (Pico 2), weil seine Eingänge 5-V-tolerant sind, nicht der RP2040.
@@ -210,13 +224,13 @@ Ziel ist ein kompaktes Gerät, das ins vorhandene Gehäuse passt. Es soll sich a
 
 **Platine (KiCad)** mit:
 - Controller-Modul und 3 × 74HCT595
-- 2×32-Wannenstecker für das Flachbandkabel
+- 2×32-Wannenstecker für das Flachbandkabel (Raster 2,54 mm, gemessen)
 - 4-poliger Encoder-Leiste
-- Versorgung: 9–12-V-Netzteil → Step-Down auf 5 V für Logik und Displays, LED-Versorgung VS direkt aus 9–12 V
+- Versorgung: 12-V-Netzteil (≥ 1 A) → Step-Down auf 5 V (≥ 1 A) für Logik und Displays, LED-Versorgung VS direkt aus 12 V
 
-Davor stehen noch drei Messungen an:
-- Stromaufnahme
-- Rastermaß des Kabelsteckers
+Strom und Rastermaß sind gemessen (siehe oben). Vor dem Layout noch offen:
+- Controller festlegen und 5-V-Toleranz der RP2350-Eingänge im Datenblatt prüfen
+- Platz im Gehäuse, Lage der Buchsen und Steckertyp am Encoder-Kabel ausmessen
 - fliegender Test mit einem Pico 2
 
 ## Verzeichnis
@@ -225,10 +239,10 @@ Davor stehen noch drei Messungen an:
 - [`CLAUDE.md`](CLAUDE.md): Projekt-Logbuch mit allen Messungen, Irrwegen, Erkenntnissen und der ausführlichen Planung
 - `arduino/`: Sketches
   - `keys` = Demo-Firmware für das ganze Board
-  - Mess- und Test-Sketches: `pin_tracer`, `led_probe`, `led_test`, `display_test`, `matrix_probe`, `line_state`, `conn_scan`
+  - Mess- und Test-Sketches: `pin_tracer`, `router_brute`, `led_probe`, `led_test`, `display_test`, `matrix_probe`, `line_state`, `conn_scan`
 - `tools/`: Python-Werkzeuge (Windows-Python mit pyserial)
   - `keyboard_gui.py` = grafische Oberfläche
-  - interaktive Messprogramme wie `pin_tracer.py`, `led_finder.py`, `led_test.py`, `matrix_finder.py`
+  - interaktive Messprogramme wie `pin_tracer.py`, `router_brute.py`, `led_finder.py`, `led_test.py`, `matrix_finder.py`
 - `logs/`: Mitschnitte der Messläufe
 - `Fotos_web/`: Fotos der geöffneten Tastatur (verkleinert)
 - `Manuals/`: Original-Handbücher von Bruker/Spectrospin (BSMS User Manual, BSMS und BSMS/2 Mainframe Technical Manual, BSMS Shim Manual, B-HPCU User Manual)
