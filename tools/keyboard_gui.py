@@ -236,8 +236,10 @@ class KeyboardGUI:
                       fill="#6b6d69")
         self.bright = c.create_text(WIDTH - LEFT - 46, dy + 66, text="", anchor="e", font=("Segoe UI", 7),
                                     fill="#6b6d69")
+        # wie auf der Platine: LED20-22 gleichmäßig über DIS2 (links), LED27 (leer), LED23, LED24 über DIS1
+        half = (WIDTH - 2 * (LEFT + 40)) / 2
         for col, (name, color) in STATUS.items():
-            x = WIDTH - LEFT - 40 - (6 - col) * 48 - 24
+            x = LEFT + 40 + (col - 1) // 3 * half + ((col - 1) % 3 + 0.5) * half / 3 - 18
             off, on = (GREEN_OFF, GREEN_ON) if color == "g" else (RED_OFF, RED_ON)
             item = c.create_oval(x, dy - 17, x + 10, dy - 7, fill=off, outline="#111")
             c.create_text(x + 13, dy - 12, text=name, anchor="w", font=("Segoe UI", 7), fill="#6b6d69")
